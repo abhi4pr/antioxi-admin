@@ -81,6 +81,11 @@ export const routes = [
       },
       {
         exact: 'true',
+        path: '/question/:questionId',
+        element: lazy(() => import('./views/extra/Question'))
+      },
+      {
+        exact: 'true',
         path: '/tasks',
         element: lazy(() => import('./views/extra/Tasks'))
       },
@@ -89,11 +94,11 @@ export const routes = [
         path: '/task',
         element: lazy(() => import('./views/extra/Task'))
       },
-      // {
-      //   exact: 'true',
-      //   path: '/task/:id',  
-      //   element: lazy(() => import('./views/extra/Task')) 
-      // },
+      {
+        exact: 'true',
+        path: '/task/:taskId',
+        element: lazy(() => import('./views/extra/Task'))
+      },
       {
         exact: 'true',
         path: '/videos',

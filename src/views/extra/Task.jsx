@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { API_URL } from '../../constants';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const Task = () => {
+const Task = ({ taskToEdit }) => {
     const navigate = useNavigate();
+    const { taskId } = useParams();
     const [formData, setFormData] = useState({
         task_title: '',
         task_desc: '',
         task_cat: '',
     });
     const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        if (taskId) {
+            axios.get(`${API_URL}/get_single_task/${taskId}`)
+                .then((response) => {
+                    setFormData(response.data.task);
+                })
+                .catch((error) => {
+                    console.error('Error fetching task data:', error);
+                    toast.error("Error fetching task data.");
+                });
+        }
+    }, [taskId]);
 
     const validateForm = () => {
         let newErrors = {};
@@ -39,13 +53,18 @@ const Task = () => {
         }
 
         try {
-            await axios.post(`${API_URL}/add_task`, formData);
-            toast.success('Task added successfully!');
+            if (taskId) {
+                await axios.put(`${API_URL}/update_task/${taskId}`, formData);
+                toast.success('Task updated successfully!');
+            } else {
+                await axios.post(`${API_URL}/add_task`, formData);
+                toast.success('Task added successfully!');
+            }
             navigate('/tasks');
-            setFormData({ task_title: '', task_desc: '', task_cat: '' });
+            // setFormData({ task_title: '', task_desc: '', task_cat: '' }); 
         } catch (error) {
             console.error('Error submitting form:', error);
-            const errorMessage = error.response?.data?.message || "Failed to add task.";
+            const errorMessage = error.response?.data?.message || "Failed to submit task.";
             toast.error(errorMessage);
         }
     };
@@ -54,8 +73,8 @@ const Task = () => {
         <Row className="justify-content-center">
             <Card>
                 <div className="text-center mb-4 mt-4">
-                    <h4 className="fw-bold">Tasks</h4>
-                    <p className="text-muted">Add tasks to the list</p>
+                    <h4 className="fw-bold">{taskId ? 'Edit Task' : 'Add Task'}</h4>
+                    <p className="text-muted">{taskId ? 'Edit the task details' : 'Add a new task'}</p>
                 </div>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group as={Row} className="mb-3" controlId="formTitle">
@@ -114,9 +133,9 @@ const Task = () => {
                     <Form.Group as={Row} className="mb-3">
                         <Col sm={{ span: 10, offset: 2 }} className="d-flex gap-2">
                             <Button type="submit" variant="primary">
-                                Submit
+                                {taskId ? 'Update' : 'Submit'}
                             </Button>
-                            <Button type="button" variant="danger">
+                            <Button type="button" variant="danger" onClick={() => navigate('/tasks')}>
                                 Cancel
                             </Button>
                         </Col>
