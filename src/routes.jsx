@@ -131,6 +131,11 @@ export const routes = [
       },
       {
         exact: 'true',
+        path: '/post/:postId',
+        element: lazy(() => import('./views/extra/Post'))
+      },
+      {
+        exact: 'true',
         path: '/feedbacks',
         element: lazy(() => import('./views/extra/Feedbacks'))
       },

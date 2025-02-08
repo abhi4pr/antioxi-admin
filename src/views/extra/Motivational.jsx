@@ -86,7 +86,7 @@ const Motivational = () => {
                 });
                 toast.success('Quote added successfully!');
             }
-            navigate('/quotes');
+            navigate('/motivationals');
         } catch (error) {
             console.error('Error submitting form:', error);
             const errorMessage = error.response?.data?.message || "Failed to submit quote.";

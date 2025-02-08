@@ -1,35 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Form, Button } from 'react-bootstrap';
-import { NavLink, Link } from 'react-router-dom';
+import { Card, Row, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import DataTable from "react-data-table-component";
+import axios from 'axios';
+import { API_URL } from '../../constants';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Feedbacks = () => {
     const [search, setSearch] = useState("");
-    const [data, setData] = useState([
-        {
-            desi_id: 1,
-            name: "Never Give Up",
-            desc: "Success is the result of perseverance."
-        },
-        {
-            desi_id: 2,
-            name: "Dream Big",
-            desc: "Dreams shape the future."
-        },
-        {
-            desi_id: 3,
-            name: "Work Hard",
-            desc: "Hard work beats talent."
-        },
-    ]);
-    const [filterdata, setFilterData] = useState([]);
+    const [data, setData] = useState([]);
+    const [filterData, setFilterData] = useState([]);
 
     useEffect(() => {
-        const result = data.filter((d) => {
-            return d.name.toLowerCase().includes(search.toLowerCase());
-        });
-        setFilterData(result);
-    }, [search]);
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/get_all_feedbacks`);
+                setData(response.data.quotes);
+                setFilterData(response.data.quotes);
+            } catch (error) {
+                console.error('Error fetching data', error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        setFilterData(data?.filter((d) => d?.user_name?.toLowerCase()?.includes(search?.toLowerCase())));
+    }, [search, data]);
 
     const columns = [
         {
@@ -40,12 +37,17 @@ const Feedbacks = () => {
         },
         {
             name: "User name",
-            selector: (row) => row.name,
+            selector: (row) => row.user_name,
+            sortable: true,
+        },
+        {
+            name: "User email",
+            selector: (row) => row.user_email,
             sortable: true,
         },
         {
             name: "Description",
-            selector: (row) => row.desc,
+            selector: (row) => row.feed_message,
             sortable: true,
         }
     ]
@@ -59,14 +61,6 @@ const Feedbacks = () => {
                             <h4 className="fw-bold">Feedbacks</h4>
                             <p className="text-muted">All Feedbacks list</p>
                         </div>
-                        {/* <Button
-                            variant="primary"
-                            as={Link}
-                            to="/motivational"
-                            className="btn-sm"
-                        >
-                            Add New
-                        </Button> */}
                     </div>
                     <input
                         type="text"
@@ -77,7 +71,7 @@ const Feedbacks = () => {
                     />
                     <DataTable
                         columns={columns}
-                        data={filterdata}
+                        data={filterData}
                         fixedHeader
                         paginationPerPage={100}
                         fixedHeaderScrollHeight="64vh"
