@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { API_URL } from '../../constants';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Motivational = () => {
+    const navigate = useNavigate();
+    const { quoteId } = useParams();
     const [formData, setFormData] = useState({
         quote_title: '',
         quote_desc: '',
@@ -13,12 +16,27 @@ const Motivational = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const [errors, setErrors] = useState({});
 
+    useEffect(() => {
+        if (quoteId) {
+            axios.get(`${API_URL}/get_single_quote/${quoteId}`)
+                .then((response) => {
+                    const { quote_title, quote_desc, quote_img } = response.data.quote;
+                    setFormData({ quote_title, quote_desc, quote_img: null });
+                    setImagePreview(`${quote_img}`);
+                })
+                .catch((error) => {
+                    console.error('Error fetching quote data:', error);
+                    toast.error("Error fetching quote data.");
+                });
+        }
+    }, [quoteId]);
+
     const validateForm = () => {
         let newErrors = {};
         if (!formData.quote_title.trim()) {
             newErrors.quote_title = "Title is required";
         }
-        if (!formData.quote_img) {
+        if (!quoteId && !formData.quote_img) {
             newErrors.quote_img = "Image is required";
         }
         setErrors(newErrors);
@@ -52,18 +70,26 @@ const Motivational = () => {
         const data = new FormData();
         data.append('quote_title', formData.quote_title);
         data.append('quote_desc', formData.quote_desc);
-        data.append('quote_img', formData.quote_img);
+        if (formData.quote_img) {
+            data.append('quote_img', formData.quote_img);
+        }
 
         try {
-            await axios.post(`${API_URL}/add_quote`, data, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-            toast.success('Quote added successfully!');
-            setFormData({ quote_title: '', quote_desc: '', quote_img: null });
-            setImagePreview(null);
+            if (quoteId) {
+                await axios.put(`${API_URL}/update_quote/${quoteId}`, data, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+                toast.success('Quote updated successfully!');
+            } else {
+                await axios.post(`${API_URL}/add_quote`, data, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+                toast.success('Quote added successfully!');
+            }
+            navigate('/quotes');
         } catch (error) {
             console.error('Error submitting form:', error);
-            const errorMessage = error.response?.data?.message || "Failed to add quote.";
+            const errorMessage = error.response?.data?.message || "Failed to submit quote.";
             toast.error(errorMessage);
         }
     };
@@ -72,14 +98,12 @@ const Motivational = () => {
         <Row className="justify-content-center">
             <Card>
                 <div className="text-center mb-4 mt-4">
-                    <h4 className="fw-bold">Motivationals</h4>
-                    <p className="text-muted">Add motivationals to the list</p>
+                    <h4 className="fw-bold">{quoteId ? 'Edit Quote' : 'Add Quote'}</h4>
+                    <p className="text-muted">{quoteId ? 'Edit the quote details' : 'Add a new quote'}</p>
                 </div>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group as={Row} className="mb-3" controlId="formTitle">
-                        <Form.Label column sm={2} style={{ textAlign: 'right' }}>
-                            Title:
-                        </Form.Label>
+                        <Form.Label column sm={2} style={{ textAlign: 'right' }}>Title:</Form.Label>
                         <Col sm={10}>
                             <Form.Control
                                 type="text"
@@ -89,16 +113,12 @@ const Motivational = () => {
                                 onChange={handleChange}
                                 isInvalid={!!errors.quote_title}
                             />
-                            <Form.Control.Feedback type="invalid">
-                                {errors.quote_title}
-                            </Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">{errors.quote_title}</Form.Control.Feedback>
                         </Col>
                     </Form.Group>
 
                     <Form.Group as={Row} className="mb-3" controlId="formDescription">
-                        <Form.Label column sm={2} style={{ textAlign: 'right' }}>
-                            Description:
-                        </Form.Label>
+                        <Form.Label column sm={2} style={{ textAlign: 'right' }}>Description:</Form.Label>
                         <Col sm={10}>
                             <Form.Control
                                 type="text"
@@ -111,9 +131,7 @@ const Motivational = () => {
                     </Form.Group>
 
                     <Form.Group as={Row} className="mb-3" controlId="formImage">
-                        <Form.Label column sm={2} style={{ textAlign: 'right' }}>
-                            Image:
-                        </Form.Label>
+                        <Form.Label column sm={2} style={{ textAlign: 'right' }}>Image:</Form.Label>
                         <Col sm={10}>
                             <Form.Control
                                 type="file"
@@ -122,9 +140,7 @@ const Motivational = () => {
                                 onChange={handleImageChange}
                                 isInvalid={!!errors.quote_img}
                             />
-                            <Form.Control.Feedback type="invalid">
-                                {errors.quote_img}
-                            </Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">{errors.quote_img}</Form.Control.Feedback>
                         </Col>
                         <Col sm={2}></Col>
                         <Col sm={3} className="mt-3">
@@ -146,12 +162,8 @@ const Motivational = () => {
 
                     <Form.Group as={Row} className="mb-3">
                         <Col sm={{ span: 10, offset: 2 }} className="d-flex gap-2">
-                            <Button type="submit" variant="primary" >
-                                Submit
-                            </Button>
-                            <Button type="button" variant="danger">
-                                Cancel
-                            </Button>
+                            <Button type="submit" variant="primary">{quoteId ? 'Update' : 'Submit'}</Button>
+                            <Button type="button" variant="danger" onClick={() => navigate('/quotes')}>Cancel</Button>
                         </Col>
                     </Form.Group>
                 </Form>

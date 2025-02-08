@@ -71,6 +71,11 @@ export const routes = [
       },
       {
         exact: 'true',
+        path: '/motivational/:quoteId',
+        element: lazy(() => import('./views/extra/Motivational'))
+      },
+      {
+        exact: 'true',
         path: '/questions',
         element: lazy(() => import('./views/extra/Questions'))
       },
