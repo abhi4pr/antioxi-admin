@@ -17,8 +17,8 @@ const Posts = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`${API_URL}/get_all_posts`);
-                setData(response.data.quotes);
-                setFilterData(response.data.quotes);
+                setData(response.data.posts);
+                setFilterData(response.data.posts);
             } catch (error) {
                 console.error('Error fetching data', error);
             }
@@ -76,7 +76,7 @@ const Posts = () => {
         },
         {
             name: "Image",
-            selector: (row) => row.post_image,
+            selector: (row) => <img src={row.post_image} alt={row.quote_title} width="50" />,
             sortable: true,
         },
         {
@@ -87,7 +87,7 @@ const Posts = () => {
         {
             name: "Edit",
             cell: (row) => (
-                <Link to={`/admin/desi-dept-auth/${row._id}`}>
+                <Link to={`/post/${row._id}`}>
                     <button className="w-100 btn btn-outline-info btn-sm user-button">
                         Edit
                     </button>

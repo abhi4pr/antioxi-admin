@@ -23,7 +23,7 @@ const Post = () => {
                 .then((response) => {
                     const { user_name, post_title, post_message, post_image } = response.data.post;
                     setFormData({ user_name, post_title, post_message, post_image: null });
-                    setImagePreview(`${API_URL}/${post_image}`);
+                    setImagePreview(`${post_image}`);
                 })
                 .catch((error) => {
                     console.error('Error fetching post data:', error);
