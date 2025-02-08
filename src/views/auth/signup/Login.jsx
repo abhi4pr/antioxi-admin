@@ -11,13 +11,13 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (email && password) {
+    if (email === 'admin@gmail.com' && password === 'Admin@890') {
       const token = 'mockToken12345';
       localStorage.setItem('token', token);
       alert('Login successful');
       navigate('/app/dashboard');
     } else {
-      alert('Please enter correct email and password.');
+      alert('Invalid email or password.');
     }
   };
 

@@ -15,6 +15,8 @@ const Task = ({ taskToEdit }) => {
     });
     const [errors, setErrors] = useState({});
 
+    const categories = ['General', 'Journey'];
+
     useEffect(() => {
         if (taskId) {
             axios.get(`${API_URL}/get_single_task/${taskId}`)
@@ -116,14 +118,17 @@ const Task = ({ taskToEdit }) => {
                             Category:
                         </Form.Label>
                         <Col sm={10}>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter task category"
+                            <Form.Select
                                 name="task_cat"
                                 value={formData.task_cat}
                                 onChange={handleChange}
                                 isInvalid={!!errors.task_cat}
-                            />
+                            >
+                                <option>Select Category</option>
+                                {categories.map((category, index) => (
+                                    <option key={index} value={category}>{category}</option>
+                                ))}
+                            </Form.Select>
                             <Form.Control.Feedback type="invalid">
                                 {errors.task_cat}
                             </Form.Control.Feedback>
