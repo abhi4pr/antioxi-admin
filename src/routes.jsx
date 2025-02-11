@@ -116,6 +116,11 @@ export const routes = [
       },
       {
         exact: 'true',
+        path: '/video/videoId',
+        element: lazy(() => import('./views/extra/Video'))
+      },
+      {
+        exact: 'true',
         path: '/users',
         element: lazy(() => import('./views/extra/Users'))
       },
@@ -147,6 +152,11 @@ export const routes = [
       {
         exact: 'true',
         path: '/reward',
+        element: lazy(() => import('./views/extra/Reward'))
+      },
+      {
+        exact: 'true',
+        path: '/reward/:rewardId',
         element: lazy(() => import('./views/extra/Reward'))
       },
       {
