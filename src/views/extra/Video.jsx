@@ -22,7 +22,7 @@ const Video = () => {
 
     useEffect(() => {
         if (videoId) {
-            axios.get(`${API_URL}/get_single_post/${videoId}`)
+            axios.get(`${API_URL}/get_single_video/${videoId}`)
                 .then((response) => {
                     const { video_title, video_desc, video_url, video_src, video_cat } = response.data.video;
                     setFormData({ video_title, video_desc, video_url, video_src: null, video_cat });

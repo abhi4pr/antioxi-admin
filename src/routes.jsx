@@ -116,6 +116,11 @@ export const routes = [
       },
       {
         exact: 'true',
+        path: '/video/:videoId',
+        element: lazy(() => import('./views/extra/Video'))
+      },
+      {
+        exact: 'true',
         path: '/video/videoId',
         element: lazy(() => import('./views/extra/Video'))
       },

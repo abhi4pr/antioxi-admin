@@ -18,6 +18,7 @@ const Videos = () => {
             try {
                 const response = await axios.get(`${API_URL}/get_all_videos`);
                 setData(response.data.videos);
+                setFilterData(response.data.videos);
             } catch (error) {
                 console.error('Error fetching data', error);
             }
@@ -32,7 +33,7 @@ const Videos = () => {
         setFilterData(result);
     }, [search]);
 
-    const handleDelete = async (taskId) => {
+    const handleDelete = async (videoId) => {
         confirmAlert({
             title: 'Confirm Deletion',
             message: 'Are you sure you want to delete this video?',
@@ -80,12 +81,15 @@ const Videos = () => {
         },
         {
             name: "Video",
-            selector: (row) => row.video_src,
+            selector: (row) =>
+                <video width="320" height="100" controls>
+                    <source src={row.video_src} type="video/mp4" />
+                </video>,
             sortable: true,
         },
         {
             name: "YT Video",
-            selector: (row) => row.video_url,
+            selector: (row) => row.video_url ? row.video_url : 'Not given',
             sortable: true,
         },
         {
