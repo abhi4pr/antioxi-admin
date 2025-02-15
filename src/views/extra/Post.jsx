@@ -16,6 +16,7 @@ const Post = () => {
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (postId) {
@@ -73,6 +74,7 @@ const Post = () => {
             toast.error("Please fill all required fields.");
             return;
         }
+        setLoading(true);
 
         const data = new FormData();
         data.append('user_name', formData.user_name);
@@ -99,6 +101,8 @@ const Post = () => {
             console.error('Error submitting form:', error);
             const errorMessage = error.response?.data?.message || "Failed to submit post.";
             toast.error(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -188,7 +192,9 @@ const Post = () => {
 
                     <Form.Group as={Row} className="mb-3">
                         <Col sm={{ span: 10, offset: 2 }} className="d-flex gap-2">
-                            <Button type="submit" variant="primary">{postId ? 'Update' : 'Submit'}</Button>
+                            <Button type="submit" variant="primary" disabled={loading}>
+                                {loading ? 'Submitting...' : postId ? 'Update' : 'Submit'}
+                            </Button>
                             <Button type="button" variant="danger" onClick={() => navigate('/posts')}>Cancel</Button>
                         </Col>
                     </Form.Group>

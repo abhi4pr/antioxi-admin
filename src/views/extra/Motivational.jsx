@@ -15,6 +15,7 @@ const Motivational = () => {
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (quoteId) {
@@ -66,6 +67,7 @@ const Motivational = () => {
             toast.error("Please fill all required fields.");
             return;
         }
+        setLoading(true);
 
         const data = new FormData();
         data.append('quote_title', formData.quote_title);
@@ -91,6 +93,8 @@ const Motivational = () => {
             console.error('Error submitting form:', error);
             const errorMessage = error.response?.data?.message || "Failed to submit quote.";
             toast.error(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -162,7 +166,9 @@ const Motivational = () => {
 
                     <Form.Group as={Row} className="mb-3">
                         <Col sm={{ span: 10, offset: 2 }} className="d-flex gap-2">
-                            <Button type="submit" variant="primary">{quoteId ? 'Update' : 'Submit'}</Button>
+                            <Button type="submit" variant="primary" disabled={loading}>
+                                {loading ? 'Submitting...' : quoteId ? 'Update' : 'Submit'}
+                            </Button>
                             <Button type="button" variant="danger" onClick={() => navigate('/quotes')}>Cancel</Button>
                         </Col>
                     </Form.Group>

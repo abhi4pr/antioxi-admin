@@ -17,6 +17,7 @@ const Video = () => {
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false)
 
     const categories = ['Yoga', 'Motivational', 'Journey'];
 
@@ -73,6 +74,7 @@ const Video = () => {
             toast.error("Please fill all required fields.");
             return;
         }
+        setLoading(true);
 
         const data = new FormData();
         data.append('video_title', formData.video_title);
@@ -99,6 +101,8 @@ const Video = () => {
             console.error('Error submitting form:', error);
             const errorMessage = error.response?.data?.message || "Failed to submit post.";
             toast.error(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -210,7 +214,9 @@ const Video = () => {
 
                     <Form.Group as={Row} className="mb-3">
                         <Col sm={{ span: 10, offset: 2 }} className="d-flex gap-2">
-                            <Button type="submit" variant="primary">{videoId ? 'Update' : 'Submit'}</Button>
+                            <Button type="submit" variant="primary" disabled={loading}>
+                                {loading ? 'Submitting...' : videoId ? 'Update' : 'Submit'}
+                            </Button>
                             <Button type="button" variant="danger" onClick={() => navigate('/videos')}>Cancel</Button>
                         </Col>
                     </Form.Group>

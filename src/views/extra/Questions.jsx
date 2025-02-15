@@ -7,20 +7,24 @@ import { API_URL } from '../../constants';
 import { toast } from 'react-toastify';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import Loader from './Loader';
 
 const Questions = () => {
     const [search, setSearch] = useState("");
     const [data, setData] = useState([]);
     const [filterData, setFilterData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const response = await axios.get(`${API_URL}/get_all_questions`);
                 setData(response.data.questions);
             } catch (error) {
                 console.error('Error fetching data', error);
             }
+            setLoading(false);
         };
         fetchData();
     }, []);
@@ -140,6 +144,8 @@ const Questions = () => {
                         fixedHeaderScrollHeight="64vh"
                         highlightOnHover
                         pagination
+                        progressPending={loading}
+                        progressComponent={<Loader message="Fetching data, please wait..." />}
                     />
                 </Card>
             </Row>

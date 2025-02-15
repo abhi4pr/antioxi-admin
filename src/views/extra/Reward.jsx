@@ -15,6 +15,7 @@ const Reward = () => {
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (rewardId) {
@@ -66,6 +67,7 @@ const Reward = () => {
             toast.error("Please fill all required fields.");
             return;
         }
+        setLoading(true);
 
         const data = new FormData();
         data.append('reward_title', formData.reward_title);
@@ -91,6 +93,8 @@ const Reward = () => {
             console.error('Error submitting form:', error);
             const errorMessage = error.response?.data?.message || "Failed to submit rewards.";
             toast.error(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -162,7 +166,9 @@ const Reward = () => {
 
                     <Form.Group as={Row} className="mb-3">
                         <Col sm={{ span: 10, offset: 2 }} className="d-flex gap-2">
-                            <Button type="submit" variant="primary">{rewardId ? 'Update' : 'Submit'}</Button>
+                            <Button type="submit" variant="primary" disabled={loading}>
+                                {loading ? 'Submitting...' : rewardId ? 'Update' : 'Submit'}
+                            </Button>
                             <Button type="button" variant="danger" onClick={() => navigate('/rewards')}>Cancel</Button>
                         </Col>
                     </Form.Group>

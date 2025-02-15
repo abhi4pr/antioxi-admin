@@ -14,6 +14,7 @@ const Task = ({ taskToEdit }) => {
         task_cat: '',
     });
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false)
 
     const categories = ['General', 'Journey'];
 
@@ -53,6 +54,7 @@ const Task = ({ taskToEdit }) => {
             toast.error("Please fill all required fields.");
             return;
         }
+        setLoading(true);
 
         try {
             if (taskId) {
@@ -68,6 +70,8 @@ const Task = ({ taskToEdit }) => {
             console.error('Error submitting form:', error);
             const errorMessage = error.response?.data?.message || "Failed to submit task.";
             toast.error(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -137,8 +141,8 @@ const Task = ({ taskToEdit }) => {
 
                     <Form.Group as={Row} className="mb-3">
                         <Col sm={{ span: 10, offset: 2 }} className="d-flex gap-2">
-                            <Button type="submit" variant="primary">
-                                {taskId ? 'Update' : 'Submit'}
+                            <Button type="submit" variant="primary" disabled={loading}>
+                                {loading ? 'Submitting...' : taskId ? 'Update' : 'Submit'}
                             </Button>
                             <Button type="button" variant="danger" onClick={() => navigate('/tasks')}>
                                 Cancel
