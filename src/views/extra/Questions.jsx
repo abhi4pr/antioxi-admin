@@ -14,20 +14,24 @@ const Questions = () => {
     const [data, setData] = useState([]);
     const [filterData, setFilterData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const perPage = 10;
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${API_URL}/get_all_questions`);
+                const response = await axios.get(`${API_URL}/get_all_questions?page=${currentPage}&perPage=${perPage}`);
                 setData(response.data.questions);
+                setTotalPages(response.data.pagination.totalPages);
             } catch (error) {
                 console.error('Error fetching data', error);
             }
             setLoading(false);
         };
         fetchData();
-    }, []);
+    }, [currentPage]);
 
     useEffect(() => {
         const result = data.filter((question) => {
@@ -69,24 +73,27 @@ const Questions = () => {
     const columns = [
         {
             name: "S.No",
-            cell: (row, index) => <div>{index + 1}</div>,
-            width: "9%",
+            cell: (row, index) => <div>{(currentPage - 1) * perPage + index + 1}</div>,
+            width: "5%",
             sortable: true,
         },
         {
             name: "Question",
             selector: (row) => row.question,
             sortable: true,
+            width: '20%'
         },
         {
             name: "Options",
             selector: (row) => row.options.join(', '),
             sortable: true,
+            width: '10%'
         },
         {
             name: "Sequence",
             selector: (row) => row.question_seq,
             sortable: true,
+            width: "8%",
         },
         {
             name: "Edit",
@@ -97,6 +104,7 @@ const Questions = () => {
                     </button>
                 </Link>
             ),
+            width: "8%",
         },
         {
             name: "Delete",
@@ -108,6 +116,7 @@ const Questions = () => {
                     Delete
                 </button>
             ),
+            width: "8%",
         },
     ];
 
@@ -115,38 +124,52 @@ const Questions = () => {
         <React.Fragment>
             <Row className="justify-content-center">
                 <Card>
-                    <div className="d-flex justify-content-between align-items-center mb-4 mt-4">
-                        <div>
-                            <h4 className="fw-bold">Questions</h4>
-                            <p className="text-muted">All Questions list</p>
+                    <Card.Body>
+                        <Row style={{ marginBottom: 20 }}>
+                            <div>
+                                <h4 className="fw-bold">Questions</h4>
+                                <p className="text-muted">All questions list</p>
+                            </div>
+                            <Col md={6}>
+                                <input
+                                    type="text"
+                                    placeholder="Search Questions..."
+                                    className="form-control"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                            </Col>
+                            <Col md={6} className="text-end">
+                                <Link to="/question">
+                                    <Button variant="primary">Add Question</Button>
+                                </Link>
+                            </Col>
+                        </Row>
+
+                        {loading ? <Loader /> : (
+                            <DataTable
+                                columns={columns}
+                                data={filterData}
+                                pagination={false}
+                            />
+                        )}
+
+                        <div className="d-flex justify-content-between mt-3">
+                            <Button
+                                disabled={currentPage === 1}
+                                onClick={() => setCurrentPage(currentPage - 1)}
+                            >
+                                Previous
+                            </Button>
+                            <span>Page {currentPage} of {totalPages}</span>
+                            <Button
+                                disabled={currentPage === totalPages}
+                                onClick={() => setCurrentPage(currentPage + 1)}
+                            >
+                                Next
+                            </Button>
                         </div>
-                        <Button
-                            variant="primary"
-                            as={Link}
-                            to="/question"
-                            className="btn-sm"
-                        >
-                            Add New
-                        </Button>
-                    </div>
-                    <input
-                        type="text"
-                        placeholder="Search here"
-                        className="w-25 form-control"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <DataTable
-                        columns={columns}
-                        data={filterData}
-                        fixedHeader
-                        paginationPerPage={100}
-                        fixedHeaderScrollHeight="64vh"
-                        highlightOnHover
-                        pagination
-                        progressPending={loading}
-                        progressComponent={<Loader message="Fetching data, please wait..." />}
-                    />
+                    </Card.Body>
                 </Card>
             </Row>
         </React.Fragment>

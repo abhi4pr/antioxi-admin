@@ -5,14 +5,17 @@ import DataTable from "react-data-table-component";
 import axios from 'axios';
 import { API_URL } from '../../constants';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import Loader from './Loader'
 
 const Users = () => {
     const [search, setSearch] = useState("");
     const [data, setData] = useState([]);
     const [filterData, setFilterData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true)
             try {
                 const response = await axios.get(`${API_URL}/get_all_users`);
                 setData(response.data.users);
@@ -20,13 +23,14 @@ const Users = () => {
             } catch (error) {
                 console.error('Error fetching data', error);
             }
+            setLoading(false)
         };
         fetchData();
     }, []);
 
     useEffect(() => {
         const result = data.filter((d) => {
-            return d.name.toLowerCase().includes(search.toLowerCase());
+            return d.user_name.toLowerCase().includes(search.toLowerCase());
         });
         setFilterData(result);
     }, [search]);
@@ -40,17 +44,17 @@ const Users = () => {
         },
         {
             name: "name",
-            selector: (row) => row.name,
+            selector: (row) => row.user_name,
             sortable: true,
         },
         {
             name: "email",
-            selector: (row) => row.email,
+            selector: (row) => row.user_email,
             sortable: true,
         },
         {
             name: "contact",
-            selector: (row) => row.contact,
+            selector: (row) => row.user_phone,
             sortable: true,
         }
     ]
@@ -81,6 +85,8 @@ const Users = () => {
                         fixedHeaderScrollHeight="64vh"
                         highlightOnHover
                         pagination
+                        progressPending={loading}
+                        progressComponent={<Loader message="Fetching data, please wait..." />}
                     />
                 </Card>
             </Row>

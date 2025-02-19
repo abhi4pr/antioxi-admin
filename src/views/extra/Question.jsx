@@ -11,9 +11,12 @@ const Question = ({ questionToEdit }) => {
     const [formData, setFormData] = useState({
         question: '',
         options: ['', '', '', ''],
+        question_cat: ''
     });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false)
+
+    const categories = ['General', 'Journey'];
 
     useEffect(() => {
         if (questionId) {
@@ -32,6 +35,9 @@ const Question = ({ questionToEdit }) => {
         let newErrors = {};
         if (!formData.question.trim()) {
             newErrors.question = "Question is required";
+        }
+        if (!formData.question_cat.trim()) {
+            newErrors.question_cat = "Question category is required";
         }
         formData.options.forEach((option, index) => {
             if (!option.trim()) {
@@ -103,6 +109,28 @@ const Question = ({ questionToEdit }) => {
                             />
                             <Form.Control.Feedback type="invalid">
                                 {errors.question}
+                            </Form.Control.Feedback>
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} className="mb-3" controlId="formCategory">
+                        <Form.Label column sm={2} style={{ textAlign: 'right' }}>
+                            Category:
+                        </Form.Label>
+                        <Col sm={10}>
+                            <Form.Select
+                                name="question_cat"
+                                value={formData.question_cat}
+                                onChange={handleChange}
+                                isInvalid={!!errors.question_cat}
+                            >
+                                <option>Select Category</option>
+                                {categories.map((category, index) => (
+                                    <option key={index} value={category}>{category}</option>
+                                ))}
+                            </Form.Select>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.question_cat}
                             </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
