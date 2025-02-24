@@ -90,6 +90,12 @@ const Questions = () => {
             width: '10%'
         },
         {
+            name: " Category",
+            selector: (row) => row?.question_cat,
+            sortable: true,
+            width: "8%",
+        },
+        {
             name: "Sequence",
             selector: (row) => row.question_seq,
             sortable: true,

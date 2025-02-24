@@ -165,6 +165,21 @@ export const routes = [
         element: lazy(() => import('./views/extra/Reward'))
       },
       {
+        exact: 'true',
+        path: '/audios',
+        element: lazy(() => import('./views/extra/Audios'))
+      },
+      {
+        exact: 'true',
+        path: '/audio',
+        element: lazy(() => import('./views/extra/Audio'))
+      },
+      {
+        exact: 'true',
+        path: '/audio/:audioId',
+        element: lazy(() => import('./views/extra/Audio'))
+      },
+      {
         path: '*',
         exact: 'true',
         element: () => <Navigate to={BASE_URL} />

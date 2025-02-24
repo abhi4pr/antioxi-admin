@@ -5,41 +5,41 @@ import { toast } from 'react-toastify';
 import { API_URL } from '../../constants';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const Motivational = () => {
+const Audio = () => {
     const navigate = useNavigate();
-    const { quoteId } = useParams();
+    const { audioId } = useParams();
     const [formData, setFormData] = useState({
-        quote_title: '',
-        quote_desc: '',
-        quote_img: null
+        audio_title: '',
+        audio_desc: '',
+        audio_file: null
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        if (quoteId) {
-            axios.get(`${API_URL}/get_single_quote/${quoteId}`)
+        if (audioId) {
+            axios.get(`${API_URL}/get_single_audio/${audioId}`)
                 .then((response) => {
-                    const { quote_title, quote_desc, quote_img } = response.data.quote;
-                    setFormData({ quote_title, quote_desc, quote_img: null });
-                    setImagePreview(`${quote_img}`);
+                    const { audio_title, audio_desc, audio_file } = response.data.audio;
+                    setFormData({ audio_title, audio_desc, audio_file: null });
+                    setImagePreview(`${audio_file}`);
                 })
                 .catch((error) => {
                     console.error('Error fetching quote data:', error);
                     toast.error("Error fetching quote data.");
                 });
         }
-    }, [quoteId]);
+    }, [audioId]);
 
     const validateForm = () => {
         let newErrors = {};
-        if (!formData.quote_title.trim()) {
-            newErrors.quote_title = "Title is required";
+        if (!formData.audio_title.trim()) {
+            newErrors.audio_title = "Title is required";
         }
-        // if (!quoteId && !formData.quote_img) {
-        //     newErrors.quote_img = "Image is required";
-        // }
+        if (!audioId && !formData.audio_file) {
+            newErrors.audio_file = "Image is required";
+        }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -57,7 +57,7 @@ const Motivational = () => {
                 setImagePreview(reader.result);
             };
             reader.readAsDataURL(file);
-            setFormData({ ...formData, quote_img: file });
+            setFormData({ ...formData, audio_file: file });
         }
     };
 
@@ -70,25 +70,25 @@ const Motivational = () => {
         setLoading(true);
 
         const data = new FormData();
-        data.append('quote_title', formData.quote_title);
-        data.append('quote_desc', formData.quote_desc);
-        if (formData.quote_img) {
-            data.append('quote_img', formData.quote_img);
+        data.append('audio_title', formData.audio_title);
+        data.append('audio_desc', formData.audio_desc);
+        if (formData.audio_file) {
+            data.append('audio_file', formData.audio_file);
         }
 
         try {
-            if (quoteId) {
-                await axios.put(`${API_URL}/update_quote/${quoteId}`, data, {
+            if (audioId) {
+                await axios.put(`${API_URL}/update_audio/${audioId}`, data, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
                 toast.success('Quote updated successfully!');
             } else {
-                await axios.post(`${API_URL}/add_quote`, data, {
+                await axios.post(`${API_URL}/add_audio`, data, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
                 toast.success('Quote added successfully!');
             }
-            navigate('/motivationals');
+            navigate('/audios');
         } catch (error) {
             console.error('Error submitting form:', error);
             const errorMessage = error.response?.data?.message || "Failed to submit quote.";
@@ -102,8 +102,8 @@ const Motivational = () => {
         <Row className="justify-content-center">
             <Card>
                 <div className="text-center mb-4 mt-4">
-                    <h4 className="fw-bold">{quoteId ? 'Edit Quote' : 'Add Quote'}</h4>
-                    <p className="text-muted">{quoteId ? 'Edit the quote details' : 'Add a new quote'}</p>
+                    <h4 className="fw-bold">{audioId ? 'Edit audio' : 'Add audio'}</h4>
+                    <p className="text-muted">{audioId ? 'Edit the audio details' : 'Add a new audio'}</p>
                 </div>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group as={Row} className="mb-3" controlId="formTitle">
@@ -112,12 +112,12 @@ const Motivational = () => {
                             <Form.Control
                                 type="text"
                                 placeholder="Enter title"
-                                name="quote_title"
-                                value={formData.quote_title}
+                                name="audio_title"
+                                value={formData.audio_title}
                                 onChange={handleChange}
-                                isInvalid={!!errors.quote_title}
+                                isInvalid={!!errors.audio_title}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.quote_title}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">{errors.audio_title}</Form.Control.Feedback>
                         </Col>
                     </Form.Group>
 
@@ -127,24 +127,24 @@ const Motivational = () => {
                             <Form.Control
                                 type="text"
                                 placeholder="Enter description"
-                                name="quote_desc"
-                                value={formData.quote_desc}
+                                name="audio_desc"
+                                value={formData.audio_desc}
                                 onChange={handleChange}
                             />
                         </Col>
                     </Form.Group>
 
                     <Form.Group as={Row} className="mb-3" controlId="formImage">
-                        <Form.Label column sm={2} style={{ textAlign: 'right' }}>Image:</Form.Label>
+                        <Form.Label column sm={2} style={{ textAlign: 'right' }}>Audio:</Form.Label>
                         <Col sm={10}>
                             <Form.Control
                                 type="file"
-                                name="quote_img"
-                                accept="image/*"
+                                name="audio_file"
+                                accept="audio/mp3"
                                 onChange={handleImageChange}
-                            // isInvalid={!!errors.quote_img}
+                            // isInvalid={!!errors.audio_file}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.quote_img}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">{errors.audio_file}</Form.Control.Feedback>
                         </Col>
                         <Col sm={2}></Col>
                         <Col sm={3} className="mt-3">
@@ -167,9 +167,9 @@ const Motivational = () => {
                     <Form.Group as={Row} className="mb-3">
                         <Col sm={{ span: 10, offset: 2 }} className="d-flex gap-2">
                             <Button type="submit" variant="primary" disabled={loading}>
-                                {loading ? 'Submitting...' : quoteId ? 'Update' : 'Submit'}
+                                {loading ? 'Submitting...' : audioId ? 'Update' : 'Submit'}
                             </Button>
-                            <Button type="button" variant="danger" onClick={() => navigate('/quotes')}>Cancel</Button>
+                            <Button type="button" variant="danger" onClick={() => navigate('/audios')}>Cancel</Button>
                         </Col>
                     </Form.Group>
                 </Form>
@@ -178,4 +178,4 @@ const Motivational = () => {
     );
 };
 
-export default Motivational;
+export default Audio;

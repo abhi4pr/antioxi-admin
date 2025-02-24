@@ -39,7 +39,7 @@ const menuItems = {
         },
         {
           id: 'videos',
-          title: 'Videos',
+          title: 'Videos & status',
           type: 'item',
           url: '/videos',
           classes: 'nav-item',
@@ -82,6 +82,14 @@ const menuItems = {
           title: 'Rewards',
           type: 'item',
           url: '/rewards',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
+        },
+        {
+          id: 'audio',
+          title: 'Audio',
+          type: 'item',
+          url: '/audios',
           classes: 'nav-item',
           icon: 'feather icon-sidebar'
         },

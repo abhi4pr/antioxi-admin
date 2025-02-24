@@ -9,7 +9,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { toast } from 'react-toastify';
 import Loader from './Loader';
 
-const Posts = () => {
+const Audios = () => {
     const [search, setSearch] = useState("");
     const [data, setData] = useState([]);
     const [filterData, setFilterData] = useState([]);
@@ -22,10 +22,10 @@ const Posts = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${API_URL}/get_all_posts`);
-                setData(response.data.posts);
-                setFilterData(response.data.posts);
-                setTotalPages(response.data.pagination.totalPages);
+                const response = await axios.get(`${API_URL}/get_all_audios?page=${currentPage}&perPage=${perPage}`);
+                setData(response.data.audios);
+                setTotalPages(response.data.pagination.totalPages)
+                setFilterData(response.data.audios);
             } catch (error) {
                 console.error('Error fetching data', error);
             }
@@ -35,25 +35,25 @@ const Posts = () => {
     }, [currentPage]);
 
     useEffect(() => {
-        setFilterData(data.filter((d) => d.post_title.toLowerCase().includes(search.toLowerCase())));
+        setFilterData(data.filter((d) => d.audio_title.toLowerCase().includes(search.toLowerCase())));
     }, [search, data]);
 
-    const handleDelete = async (quoteId) => {
+    const handleDelete = async (audioId) => {
         confirmAlert({
             title: 'Confirm Deletion',
-            message: 'Are you sure you want to delete this post?',
+            message: 'Are you sure you want to delete this audio?',
             buttons: [
                 {
                     label: 'Yes',
                     onClick: async () => {
                         try {
-                            await axios.delete(`${API_URL}/delete_post/${postId}`);
-                            const updatedData = data.filter(quote => quote._id !== postId);
+                            await axios.delete(`${API_URL}/delete_audio/${audioId}`);
+                            const updatedData = data.filter(quote => quote._id !== audioId);
                             setData(updatedData);
                             setFilterData(updatedData);
-                            toast.success('Post Deleted successfully!');
+                            toast.success('Audio Deleted successfully!');
                         } catch (error) {
-                            console.error('Error deleting quote', error);
+                            console.error('Error deleting audio', error);
                         }
                     }
                 },
@@ -68,41 +68,33 @@ const Posts = () => {
     const columns = [
         {
             name: "S.No",
-            cell: (row, index) => <div>{index + 1}</div>,
-            width: "8%",
+            cell: (row, index) => <div>{(currentPage - 1) * perPage + index + 1}</div>,
+            width: "5%",
             sortable: true,
         },
         {
-            name: "Post Title",
-            selector: (row) => row.post_title,
+            name: "Title",
+            selector: (row) => row.audio_title,
             sortable: true,
-            width: "20%",
+            width: "8%",
         },
         {
             name: "Description",
-            selector: (row) =>
-                row.post_message && row.post_message.length > 50
-                    ? row.post_message.substring(0, 50) + "..."
-                    : row.post_message,
+            selector: (row) => row.audio_desc,
             sortable: true,
-            width: "15%",
+            width: "8%",
         },
         {
-            name: "Image",
-            selector: (row) => <img src={row.post_image} width="50" />,
+            name: "Audio",
+            selector: (row) => row.audio_file,
+            cell: (row) => <img src={row.audio_file} width="50" />,
             sortable: true,
-            width: "9%",
-        },
-        {
-            name: "Posted by",
-            selector: (row) => row.user_name,
-            sortable: true,
-            width: "15%",
+            width: "8%",
         },
         {
             name: "Edit",
             cell: (row) => (
-                <Link to={`/post/${row._id}`}>
+                <Link to={`/audio/${row._id}`}>
                     <button className="w-100 btn btn-outline-info btn-sm user-button">
                         Edit
                     </button>
@@ -120,7 +112,7 @@ const Posts = () => {
                     Delete
                 </button>
             ),
-            width: "10%",
+            width: "8%",
         },
     ]
 
@@ -131,21 +123,21 @@ const Posts = () => {
                     <Card.Body>
                         <Row style={{ marginBottom: 20 }}>
                             <div>
-                                <h4 className="fw-bold">Posts</h4>
-                                <p className="text-muted">All Posts list</p>
+                                <h4 className="fw-bold">Audio</h4>
+                                <p className="text-muted">All audio list</p>
                             </div>
                             <Col md={6}>
                                 <input
                                     type="text"
-                                    placeholder="Search Posts..."
+                                    placeholder="Search Audio..."
                                     className="form-control"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                             </Col>
                             <Col md={6} className="text-end">
-                                <Link to="/post">
-                                    <Button variant="primary">Add Post</Button>
+                                <Link to="/audio">
+                                    <Button variant="primary">Add Audio</Button>
                                 </Link>
                             </Col>
                         </Row>
@@ -180,4 +172,4 @@ const Posts = () => {
     );
 };
 
-export default Posts;
+export default Audios;

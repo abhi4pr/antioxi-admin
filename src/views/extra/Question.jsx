@@ -16,7 +16,7 @@ const Question = ({ questionToEdit }) => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false)
 
-    const categories = ['General', 'Journey'];
+    const categories = ['General', 'Journey', 'Health'];
 
     useEffect(() => {
         if (questionId) {

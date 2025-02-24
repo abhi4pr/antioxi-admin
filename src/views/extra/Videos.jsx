@@ -14,6 +14,9 @@ const Videos = () => {
     const [data, setData] = useState([]);
     const [filterData, setFilterData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const perPage = 10;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,13 +25,14 @@ const Videos = () => {
                 const response = await axios.get(`${API_URL}/get_all_videos`);
                 setData(response.data.videos);
                 setFilterData(response.data.videos);
+                setTotalPages(response.data.pagination.totalPages)
             } catch (error) {
                 console.error('Error fetching data', error);
             }
             setLoading(false);
         };
         fetchData();
-    }, []);
+    }, [currentPage]);
 
     useEffect(() => {
         const result = data.filter((d) => {
@@ -127,39 +131,53 @@ const Videos = () => {
     return (
         <React.Fragment>
             <Row className="justify-content-center">
-                <Card title="Hello Card" isOption>
-                    <div className="d-flex justify-content-between align-items-center mb-4 mt-4">
-                        <div>
-                            <h4 className="fw-bold">Videos</h4>
-                            <p className="text-muted">All Videos list</p>
+                <Card>
+                    <Card.Body>
+                        <Row style={{ marginBottom: 20 }}>
+                            <div>
+                                <h4 className="fw-bold">Videos</h4>
+                                <p className="text-muted">All Videos list</p>
+                            </div>
+                            <Col md={6}>
+                                <input
+                                    type="text"
+                                    placeholder="Search Videos..."
+                                    className="form-control"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                            </Col>
+                            <Col md={6} className="text-end">
+                                <Link to="/video">
+                                    <Button variant="primary">Add Video</Button>
+                                </Link>
+                            </Col>
+                        </Row>
+
+                        {loading ? <Loader /> : (
+                            <DataTable
+                                columns={columns}
+                                data={filterData}
+                                pagination={false}
+                            />
+                        )}
+
+                        <div className="d-flex justify-content-between mt-3">
+                            <Button
+                                disabled={currentPage === 1}
+                                onClick={() => setCurrentPage(currentPage - 1)}
+                            >
+                                Previous
+                            </Button>
+                            <span>Page {currentPage} of {totalPages}</span>
+                            <Button
+                                disabled={currentPage === totalPages}
+                                onClick={() => setCurrentPage(currentPage + 1)}
+                            >
+                                Next
+                            </Button>
                         </div>
-                        <Button
-                            variant="primary"
-                            as={Link}
-                            to="/video"
-                            className="btn-sm"
-                        >
-                            Add New
-                        </Button>
-                    </div>
-                    <input
-                        type="text"
-                        placeholder="Search here"
-                        className="w-25 form-control "
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <DataTable
-                        columns={columns}
-                        data={filterData}
-                        fixedHeader
-                        paginationPerPage={100}
-                        fixedHeaderScrollHeight="64vh"
-                        highlightOnHover
-                        pagination
-                        progressPending={loading}
-                        progressComponent={<Loader message="Fetching data, please wait..." />}
-                    />
+                    </Card.Body>
                 </Card>
             </Row>
         </React.Fragment>

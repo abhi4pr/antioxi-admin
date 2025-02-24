@@ -19,7 +19,7 @@ const Video = () => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false)
 
-    const categories = ['Yoga', 'Motivational', 'Journey'];
+    const categories = ['Yoga', 'Motivational', 'Journey', 'Status'];
 
     useEffect(() => {
         if (videoId) {
@@ -188,7 +188,7 @@ const Video = () => {
                             <Form.Control
                                 type="file"
                                 name="video_src"
-                                accept="image/*"
+                                accept="video/*"
                                 onChange={handleImageChange}
                                 isInvalid={!!errors.video_src}
                             />
