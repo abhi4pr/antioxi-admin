@@ -180,6 +180,21 @@ export const routes = [
         element: lazy(() => import('./views/extra/Audio'))
       },
       {
+        exact: 'true',
+        path: '/checkpoints',
+        element: lazy(() => import('./views/extra/Checkpoints'))
+      },
+      {
+        exact: 'true',
+        path: '/checkpoint',
+        element: lazy(() => import('./views/extra/Checkpoint'))
+      },
+      {
+        exact: 'true',
+        path: '/checkpoint/:checkpointId',
+        element: lazy(() => import('./views/extra/Checkpoint'))
+      },
+      {
         path: '*',
         exact: 'true',
         element: () => <Navigate to={BASE_URL} />

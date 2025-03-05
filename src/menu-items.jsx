@@ -86,6 +86,14 @@ const menuItems = {
           icon: 'feather icon-sidebar'
         },
         {
+          id: 'checkpoints',
+          title: 'Check Points',
+          type: 'item',
+          url: '/checkpoints',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
+        },
+        {
           id: 'audio',
           title: 'Audio',
           type: 'item',
