@@ -2,22 +2,33 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Row, Col } from 'react-bootstrap';
 
-// project import
+import axios from 'axios';
 import Breadcrumb from '../../../layouts/AdminLayout/Breadcrumb';
+import { API_URL } from '../../../constants';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (email === 'admin@gmail.com' && password === 'Admin@890') {
-      const token = 'mockToken12345';
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(`${API_URL}/auth/login`, {
+        email,
+        password
+      });
+
+      const { token } = response.data;
       localStorage.setItem('token', token);
       alert('Login successful');
       navigate('/app/dashboard');
-    } else {
-      alert('Invalid email or password.');
+    } catch (error) {
+      if (error.response && error.response.data) {
+        alert(error.response.data.message || 'Invalid email or password.');
+      } else {
+        alert('An error occurred during login.');
+      }
+      console.error('Login error:', error);
     }
   };
 

@@ -22,7 +22,7 @@ const Quotes = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${API_URL}/get_all_quotes?page=${currentPage}&perPage=${perPage}`);
+                const response = await axios.get(`${API_URL}/quotes?page=${currentPage}&perPage=${perPage}`);
                 setData(response.data.quotes);
                 setTotalPages(response.data.pagination.totalPages)
                 setFilterData(response.data.quotes);
@@ -35,7 +35,7 @@ const Quotes = () => {
     }, [currentPage]);
 
     useEffect(() => {
-        setFilterData(data.filter((d) => d.quote_title.toLowerCase().includes(search.toLowerCase())));
+        setFilterData(data.filter((d) => d.title.toLowerCase().includes(search.toLowerCase())));
     }, [search, data]);
 
     const handleDelete = async (quoteId) => {
@@ -47,7 +47,7 @@ const Quotes = () => {
                     label: 'Yes',
                     onClick: async () => {
                         try {
-                            await axios.delete(`${API_URL}/delete_quote/${quoteId}`);
+                            await axios.delete(`${API_URL}/quotes/${quoteId}`);
                             const updatedData = data.filter(quote => quote._id !== quoteId);
                             setData(updatedData);
                             setFilterData(updatedData);
@@ -74,20 +74,20 @@ const Quotes = () => {
         },
         {
             name: "Title",
-            selector: (row) => row.quote_title,
+            selector: (row) => row.title,
             sortable: true,
             width: "8%",
         },
         {
             name: "Description",
-            selector: (row) => row.quote_desc,
+            selector: (row) => row.content,
             sortable: true,
             width: "8%",
         },
         {
             name: "Image",
-            selector: (row) => row.quote_img,
-            cell: (row) => <img src={row.quote_img} alt={row.quote_title} width="50" />,
+            selector: (row) => row.image,
+            cell: (row) => <img src={row.image} alt={row.title} width="50" />,
             sortable: true,
             width: "8%",
         },

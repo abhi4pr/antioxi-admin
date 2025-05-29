@@ -4,14 +4,15 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { API_URL } from '../../constants';
 import { useNavigate, useParams } from 'react-router-dom';
+import api from '../../utility/api'
 
 const Motivational = () => {
     const navigate = useNavigate();
     const { quoteId } = useParams();
     const [formData, setFormData] = useState({
-        quote_title: '',
-        quote_desc: '',
-        quote_img: null
+        title: '',
+        content: '',
+        image: null
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [errors, setErrors] = useState({});
@@ -19,11 +20,11 @@ const Motivational = () => {
 
     useEffect(() => {
         if (quoteId) {
-            axios.get(`${API_URL}/get_single_quote/${quoteId}`)
+            api.get(`${API_URL}/quotes/${quoteId}`)
                 .then((response) => {
-                    const { quote_title, quote_desc, quote_img } = response.data.quote;
-                    setFormData({ quote_title, quote_desc, quote_img: null });
-                    setImagePreview(`${quote_img}`);
+                    const { title, content, image } = response.data;
+                    setFormData({ title, content, image: null });
+                    setImagePreview(`${image}`);
                 })
                 .catch((error) => {
                     console.error('Error fetching quote data:', error);
@@ -34,11 +35,11 @@ const Motivational = () => {
 
     const validateForm = () => {
         let newErrors = {};
-        if (!formData.quote_title.trim()) {
-            newErrors.quote_title = "Title is required";
+        if (!formData.title.trim()) {
+            newErrors.title = "Title is required";
         }
-        // if (!quoteId && !formData.quote_img) {
-        //     newErrors.quote_img = "Image is required";
+        // if (!quoteId && !formData.image) {
+        //     newErrors.image = "Image is required";
         // }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -57,7 +58,7 @@ const Motivational = () => {
                 setImagePreview(reader.result);
             };
             reader.readAsDataURL(file);
-            setFormData({ ...formData, quote_img: file });
+            setFormData({ ...formData, image: file });
         }
     };
 
@@ -70,20 +71,20 @@ const Motivational = () => {
         setLoading(true);
 
         const data = new FormData();
-        data.append('quote_title', formData.quote_title);
-        data.append('quote_desc', formData.quote_desc);
-        if (formData.quote_img) {
-            data.append('quote_img', formData.quote_img);
+        data.append('title', formData.title);
+        data.append('content', formData.content);
+        if (formData.image) {
+            data.append('image', formData.image);
         }
 
         try {
             if (quoteId) {
-                await axios.put(`${API_URL}/update_quote/${quoteId}`, data, {
+                await api.put(`${API_URL}/quotes/${quoteId}`, data, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
                 toast.success('Quote updated successfully!');
             } else {
-                await axios.post(`${API_URL}/add_quote`, data, {
+                await api.post(`${API_URL}/quotes/add-quote`, data, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
                 toast.success('Quote added successfully!');
@@ -112,12 +113,12 @@ const Motivational = () => {
                             <Form.Control
                                 type="text"
                                 placeholder="Enter title"
-                                name="quote_title"
-                                value={formData.quote_title}
+                                name="title"
+                                value={formData.title}
                                 onChange={handleChange}
-                                isInvalid={!!errors.quote_title}
+                                isInvalid={!!errors.title}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.quote_title}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
                         </Col>
                     </Form.Group>
 
@@ -127,8 +128,8 @@ const Motivational = () => {
                             <Form.Control
                                 type="text"
                                 placeholder="Enter description"
-                                name="quote_desc"
-                                value={formData.quote_desc}
+                                name="content"
+                                value={formData.content}
                                 onChange={handleChange}
                             />
                         </Col>
@@ -139,12 +140,12 @@ const Motivational = () => {
                         <Col sm={10}>
                             <Form.Control
                                 type="file"
-                                name="quote_img"
+                                name="image"
                                 accept="image/*"
                                 onChange={handleImageChange}
-                            // isInvalid={!!errors.quote_img}
+                            // isInvalid={!!errors.image}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.quote_img}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">{errors.image}</Form.Control.Feedback>
                         </Col>
                         <Col sm={2}></Col>
                         <Col sm={3} className="mt-3">
