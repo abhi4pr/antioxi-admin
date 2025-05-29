@@ -8,6 +8,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { toast } from 'react-toastify';
 import Loader from './Loader';
+import api from '../../utility/api'
 
 const Quotes = () => {
     const [search, setSearch] = useState("");
@@ -22,9 +23,9 @@ const Quotes = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${API_URL}/quotes?page=${currentPage}&perPage=${perPage}`);
+                const response = await api.get(`${API_URL}/quotes?page=${currentPage}&perPage=${perPage}`);
                 setData(response.data.quotes);
-                setTotalPages(response.data.pagination.totalPages)
+                setTotalPages(response.data.totalPages)
                 setFilterData(response.data.quotes);
             } catch (error) {
                 console.error('Error fetching data', error);
@@ -69,27 +70,22 @@ const Quotes = () => {
         {
             name: "S.No",
             cell: (row, index) => <div>{(currentPage - 1) * perPage + index + 1}</div>,
-            width: "5%",
             sortable: true,
         },
         {
             name: "Title",
             selector: (row) => row.title,
             sortable: true,
-            width: "8%",
         },
         {
             name: "Description",
             selector: (row) => row.content,
             sortable: true,
-            width: "8%",
         },
         {
             name: "Image",
-            selector: (row) => row.image,
             cell: (row) => <img src={row.image} alt={row.title} width="50" />,
-            sortable: true,
-            width: "8%",
+            sortable: false,
         },
         {
             name: "Edit",
@@ -100,7 +96,6 @@ const Quotes = () => {
                     </button>
                 </Link>
             ),
-            width: "8%",
         },
         {
             name: "Delete",
@@ -112,9 +107,9 @@ const Quotes = () => {
                     Delete
                 </button>
             ),
-            width: "8%",
         },
-    ]
+    ];
+    
 
     return (
         <React.Fragment>
@@ -144,27 +139,17 @@ const Quotes = () => {
 
                         {loading ? <Loader /> : (
                             <DataTable
-                                columns={columns}
-                                data={filterData}
-                                pagination={false}
-                            />
+                            columns={columns}
+                            data={filterData}
+                            pagination
+                            paginationServer
+                            paginationPerPage={perPage}
+                            paginationTotalRows={totalPages * perPage}
+                            onChangePage={(page) => setCurrentPage(page)}
+                        />
                         )}
 
-                        <div className="d-flex justify-content-between mt-3">
-                            <Button
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage(currentPage - 1)}
-                            >
-                                Previous
-                            </Button>
-                            <span>Page {currentPage} of {totalPages}</span>
-                            <Button
-                                disabled={currentPage === totalPages}
-                                onClick={() => setCurrentPage(currentPage + 1)}
-                            >
-                                Next
-                            </Button>
-                        </div>
+                        
                     </Card.Body>
                 </Card>
             </Row>

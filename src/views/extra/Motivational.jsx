@@ -22,7 +22,7 @@ const Motivational = () => {
         if (quoteId) {
             api.get(`${API_URL}/quotes/${quoteId}`)
                 .then((response) => {
-                    const { title, content, image } = response.data;
+                    const { title, content, image } = response.data.quote;
                     setFormData({ title, content, image: null });
                     setImagePreview(`${image}`);
                 })
