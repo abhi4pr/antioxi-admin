@@ -8,6 +8,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { toast } from 'react-toastify';
 import Loader from './Loader';
+import api from '../../utility/api'
 
 const Audios = () => {
     const [search, setSearch] = useState("");
@@ -22,9 +23,9 @@ const Audios = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${API_URL}/get_all_audios?page=${currentPage}&perPage=${perPage}`);
+                const response = await api.get(`${API_URL}/audios?page=${currentPage}&perPage=${perPage}`);
                 setData(response.data.audios);
-                setTotalPages(response.data.pagination.totalPages)
+                setTotalPages(response.data.totalPages)
                 setFilterData(response.data.audios);
             } catch (error) {
                 console.error('Error fetching data', error);
@@ -35,7 +36,7 @@ const Audios = () => {
     }, [currentPage]);
 
     useEffect(() => {
-        setFilterData(data.filter((d) => d.audio_title.toLowerCase().includes(search.toLowerCase())));
+        setFilterData(data.filter((d) => d.title.toLowerCase().includes(search.toLowerCase())));
     }, [search, data]);
 
     const handleDelete = async (audioId) => {
@@ -47,7 +48,7 @@ const Audios = () => {
                     label: 'Yes',
                     onClick: async () => {
                         try {
-                            await axios.delete(`${API_URL}/delete_audio/${audioId}`);
+                            await api.delete(`${API_URL}/audios/${audioId}`);
                             const updatedData = data.filter(quote => quote._id !== audioId);
                             setData(updatedData);
                             setFilterData(updatedData);
@@ -69,27 +70,33 @@ const Audios = () => {
         {
             name: "S.No",
             cell: (row, index) => <div>{(currentPage - 1) * perPage + index + 1}</div>,
-            width: "5%",
+            
             sortable: true,
         },
         {
             name: "Title",
-            selector: (row) => row.audio_title,
+            selector: (row) => row.title,
             sortable: true,
-            width: "8%",
+            
         },
         {
             name: "Description",
-            selector: (row) => row.audio_desc,
+            selector: (row) => row.description,
             sortable: true,
-            width: "8%",
+            
+        },
+        {
+            name: "Category",
+            selector: (row) => row.category,
+            sortable: true,
+            
         },
         {
             name: "Audio",
-            selector: (row) => row.audio_file,
+            selector: (row) => row.audioFile,
             cell: (row) => <img src={row.audio_file} width="50" />,
             sortable: true,
-            width: "8%",
+            
         },
         {
             name: "Edit",
@@ -100,7 +107,7 @@ const Audios = () => {
                     </button>
                 </Link>
             ),
-            width: "8%",
+            
         },
         {
             name: "Delete",
@@ -112,7 +119,7 @@ const Audios = () => {
                     Delete
                 </button>
             ),
-            width: "8%",
+            
         },
     ]
 
@@ -146,25 +153,14 @@ const Audios = () => {
                             <DataTable
                                 columns={columns}
                                 data={filterData}
-                                pagination={false}
+                                pagination
+                                paginationServer
+                                paginationPerPage={perPage}
+                                paginationTotalRows={totalPages * perPage}
+                                onChangePage={(page) => setCurrentPage(page)}
                             />
                         )}
 
-                        <div className="d-flex justify-content-between mt-3">
-                            <Button
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage(currentPage - 1)}
-                            >
-                                Previous
-                            </Button>
-                            <span>Page {currentPage} of {totalPages}</span>
-                            <Button
-                                disabled={currentPage === totalPages}
-                                onClick={() => setCurrentPage(currentPage + 1)}
-                            >
-                                Next
-                            </Button>
-                        </div>
                     </Card.Body>
                 </Card>
             </Row>

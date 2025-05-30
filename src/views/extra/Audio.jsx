@@ -4,14 +4,16 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { API_URL } from '../../constants';
 import { useNavigate, useParams } from 'react-router-dom';
+import api from '../../utility/api'
 
 const Audio = () => {
     const navigate = useNavigate();
     const { audioId } = useParams();
     const [formData, setFormData] = useState({
-        audio_title: '',
-        audio_desc: '',
-        audio_file: null
+        title: '',
+        description: '',
+        category: '',
+        audioFile: null
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [errors, setErrors] = useState({});
@@ -19,11 +21,11 @@ const Audio = () => {
 
     useEffect(() => {
         if (audioId) {
-            axios.get(`${API_URL}/get_single_audio/${audioId}`)
+            api.get(`${API_URL}/get_single_audio/${audioId}`)
                 .then((response) => {
-                    const { audio_title, audio_desc, audio_file } = response.data.audio;
-                    setFormData({ audio_title, audio_desc, audio_file: null });
-                    setImagePreview(`${audio_file}`);
+                    const { title, description, category, audioFile } = response.data.audio;
+                    setFormData({ title, description, category, audioFile: null });
+                    setImagePreview(`${audioFile}`);
                 })
                 .catch((error) => {
                     console.error('Error fetching quote data:', error);
@@ -34,11 +36,11 @@ const Audio = () => {
 
     const validateForm = () => {
         let newErrors = {};
-        if (!formData.audio_title.trim()) {
-            newErrors.audio_title = "Title is required";
+        if (!formData.title.trim()) {
+            newErrors.title = "Title is required";
         }
-        if (!audioId && !formData.audio_file) {
-            newErrors.audio_file = "Image is required";
+        if (!audioId && !formData.audioFile) {
+            newErrors.audioFile = "Image is required";
         }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -57,7 +59,7 @@ const Audio = () => {
                 setImagePreview(reader.result);
             };
             reader.readAsDataURL(file);
-            setFormData({ ...formData, audio_file: file });
+            setFormData({ ...formData, audioFile: file });
         }
     };
 
@@ -70,20 +72,21 @@ const Audio = () => {
         setLoading(true);
 
         const data = new FormData();
-        data.append('audio_title', formData.audio_title);
-        data.append('audio_desc', formData.audio_desc);
-        if (formData.audio_file) {
-            data.append('audio_file', formData.audio_file);
+        data.append('title', formData.title);
+        data.append('description', formData.description);
+        data.append('category', formData.category);
+        if (formData.audioFile) {
+            data.append('audioFile', formData.audioFile);
         }
 
         try {
             if (audioId) {
-                await axios.put(`${API_URL}/update_audio/${audioId}`, data, {
+                await api.put(`${API_URL}/audios/${audioId}`, data, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
                 toast.success('Quote updated successfully!');
             } else {
-                await axios.post(`${API_URL}/add_audio`, data, {
+                await api.post(`${API_URL}/audios/`, data, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
                 toast.success('Quote added successfully!');
@@ -91,7 +94,7 @@ const Audio = () => {
             navigate('/audios');
         } catch (error) {
             console.error('Error submitting form:', error);
-            const errorMessage = error.response?.data?.message || "Failed to submit quote.";
+            const errorMessage = error.response?.data?.message || "Failed to add audio.";
             toast.error(errorMessage);
         } finally {
             setLoading(false);
@@ -112,12 +115,12 @@ const Audio = () => {
                             <Form.Control
                                 type="text"
                                 placeholder="Enter title"
-                                name="audio_title"
-                                value={formData.audio_title}
+                                name="title"
+                                value={formData.title}
                                 onChange={handleChange}
-                                isInvalid={!!errors.audio_title}
+                                isInvalid={!!errors.title}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.audio_title}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
                         </Col>
                     </Form.Group>
 
@@ -127,10 +130,30 @@ const Audio = () => {
                             <Form.Control
                                 type="text"
                                 placeholder="Enter description"
-                                name="audio_desc"
-                                value={formData.audio_desc}
+                                name="description"
+                                value={formData.description}
                                 onChange={handleChange}
                             />
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} className="mb-3" controlId="formCategory">
+                        <Form.Label column sm={2} style={{ textAlign: 'right' }}>Category:</Form.Label>
+                        <Col sm={10}>
+                            <Form.Control
+                                as="select"
+                                name="category"
+                                value={formData.category}
+                                onChange={handleChange}
+                                isInvalid={!!errors.category}
+                            >
+                                <option value="">Select a category</option>
+                                <option value="General">General</option>
+                                <option value="Music">Music</option>
+                                <option value="Podcast">Podcast</option>
+                                <option value="Audiobook">Audiobook</option>
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
                         </Col>
                     </Form.Group>
 
@@ -139,12 +162,12 @@ const Audio = () => {
                         <Col sm={10}>
                             <Form.Control
                                 type="file"
-                                name="audio_file"
+                                name="audioFile"
                                 accept="audio/mp3"
                                 onChange={handleImageChange}
-                            // isInvalid={!!errors.audio_file}
+                            // isInvalid={!!errors.audioFile}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.audio_file}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">{errors.audioFile}</Form.Control.Feedback>
                         </Col>
                         <Col sm={2}></Col>
                         <Col sm={3} className="mt-3">
