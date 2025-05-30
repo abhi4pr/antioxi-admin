@@ -21,7 +21,7 @@ const Audio = () => {
 
     useEffect(() => {
         if (audioId) {
-            api.get(`${API_URL}/get_single_audio/${audioId}`)
+            api.get(`${API_URL}/audios/${audioId}`)
                 .then((response) => {
                     const { title, description, category, audioFile } = response.data.audio;
                     setFormData({ title, description, category, audioFile: null });
