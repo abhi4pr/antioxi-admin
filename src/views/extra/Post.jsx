@@ -123,8 +123,9 @@ const Post = () => {
     data.append('category', formData.category);
     data.append('user', formData.user);
 
+    // Append images as an array
     formData.images.forEach((img, i) => {
-      data.append('images', img);
+      data.append(`images[${i}]`, img);
     });
 
     try {

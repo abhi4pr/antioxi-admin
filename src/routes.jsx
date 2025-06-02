@@ -89,21 +89,7 @@ export const routes = [
         path: '/question/:questionId',
         element: lazy(() => import('./views/extra/Question'))
       },
-      {
-        exact: 'true',
-        path: '/tasks',
-        element: lazy(() => import('./views/extra/Tasks'))
-      },
-      {
-        exact: 'true',
-        path: '/task',
-        element: lazy(() => import('./views/extra/Task'))
-      },
-      {
-        exact: 'true',
-        path: '/task/:taskId',
-        element: lazy(() => import('./views/extra/Task'))
-      },
+
       {
         exact: 'true',
         path: '/videos',
@@ -179,21 +165,7 @@ export const routes = [
         path: '/audio/:audioId',
         element: lazy(() => import('./views/extra/Audio'))
       },
-      {
-        exact: 'true',
-        path: '/checkpoints',
-        element: lazy(() => import('./views/extra/Checkpoints'))
-      },
-      {
-        exact: 'true',
-        path: '/checkpoint',
-        element: lazy(() => import('./views/extra/Checkpoint'))
-      },
-      {
-        exact: 'true',
-        path: '/checkpoint/:checkpointId',
-        element: lazy(() => import('./views/extra/Checkpoint'))
-      },
+
       {
         path: '*',
         exact: 'true',

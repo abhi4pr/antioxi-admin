@@ -30,14 +30,6 @@ const menuItems = {
           icon: 'feather icon-sidebar'
         },
         {
-          id: 'tasks',
-          title: 'Daily Tasks',
-          type: 'item',
-          url: '/tasks',
-          classes: 'nav-item',
-          icon: 'feather icon-sidebar'
-        },
-        {
           id: 'videos',
           title: 'Videos & status',
           type: 'item',
@@ -61,14 +53,6 @@ const menuItems = {
           classes: 'nav-item',
           icon: 'feather icon-sidebar'
         },
-        // {
-        //   id: 'moods',
-        //   title: 'User Moods',
-        //   type: 'item',
-        //   url: '/moods',
-        //   classes: 'nav-item',
-        //   icon: 'feather icon-sidebar'
-        // },
         {
           id: 'feedbacks',
           title: 'Feedbacks',
@@ -86,21 +70,13 @@ const menuItems = {
           icon: 'feather icon-sidebar'
         },
         {
-          id: 'checkpoints',
-          title: 'Check Points',
-          type: 'item',
-          url: '/checkpoints',
-          classes: 'nav-item',
-          icon: 'feather icon-sidebar'
-        },
-        {
           id: 'audio',
           title: 'Audio',
           type: 'item',
           url: '/audios',
           classes: 'nav-item',
           icon: 'feather icon-sidebar'
-        },
+        }
       ]
     }
   ]
