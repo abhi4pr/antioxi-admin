@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { API_URL } from '../../constants';
 import { useNavigate, useParams } from 'react-router-dom';
+import api from '../../utility/api';
 
 const Question = ({ questionToEdit }) => {
     const navigate = useNavigate();
@@ -11,7 +12,8 @@ const Question = ({ questionToEdit }) => {
     const [formData, setFormData] = useState({
         question: '',
         options: ['', '', '', ''],
-        question_cat: ''
+        category: '',
+        sequence: 0,
     });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false)
@@ -20,7 +22,7 @@ const Question = ({ questionToEdit }) => {
 
     useEffect(() => {
         if (questionId) {
-            axios.get(`${API_URL}/get_single_question/${questionId}`)
+            api.get(`${API_URL}/questions/${questionId}`)
                 .then((response) => {
                     setFormData(response.data.question);
                 })
@@ -36,8 +38,8 @@ const Question = ({ questionToEdit }) => {
         if (!formData.question.trim()) {
             newErrors.question = "Question is required";
         }
-        if (!formData.question_cat.trim()) {
-            newErrors.question_cat = "Question category is required";
+        if (!formData.category.trim()) {
+            newErrors.category = "Question category is required";
         }
         formData.options.forEach((option, index) => {
             if (!option.trim()) {
@@ -70,10 +72,10 @@ const Question = ({ questionToEdit }) => {
 
         try {
             if (questionId) {
-                await axios.put(`${API_URL}/update_question/${questionId}`, formData);
+                await api.put(`${API_URL}/questions/${questionId}`, formData);
                 toast.success('Question updated successfully!');
             } else {
-                await axios.post(`${API_URL}/add_question`, formData);
+                await api.post(`${API_URL}/questions/`, formData);
                 toast.success('Question added successfully!');
             }
             navigate('/questions');
@@ -119,10 +121,10 @@ const Question = ({ questionToEdit }) => {
                         </Form.Label>
                         <Col sm={10}>
                             <Form.Select
-                                name="question_cat"
-                                value={formData.question_cat}
+                                name="extra"
+                                value={formData.extra}
                                 onChange={handleChange}
-                                isInvalid={!!errors.question_cat}
+                                isInvalid={!!errors.extra}
                             >
                                 <option>Select Category</option>
                                 {categories.map((category, index) => (
@@ -130,7 +132,7 @@ const Question = ({ questionToEdit }) => {
                                 ))}
                             </Form.Select>
                             <Form.Control.Feedback type="invalid">
-                                {errors.question_cat}
+                                {errors.extra}
                             </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
