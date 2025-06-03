@@ -6,42 +6,56 @@ import { API_URL } from '../../constants';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../utility/api';
 
-const Audio = () => {
+const Book = () => {
   const navigate = useNavigate();
-  const { audioId } = useParams();
+  const { bookId } = useParams();
   const [formData, setFormData] = useState({
-    title: '',
+    name: '',
     description: '',
-    category: '',
-    audioFile: null
+    category: 'Default',
+    pdfFile: null
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  const categories = [
+    'Default',
+    'Fiction',
+    'Non-Fiction',
+    'Science',
+    'History',
+    'Biography',
+    'Fantasy',
+    'Mystery',
+    'Romance',
+    'Self-Help',
+    'Health & Wellness'
+  ];
+
   useEffect(() => {
-    if (audioId) {
+    if (bookId) {
       api
-        .get(`${API_URL}/audios/${audioId}`)
+        .get(`${API_URL}/books/${bookId}`)
         .then((response) => {
-          const { title, description, category, audioFile } = response.data.audio;
-          setFormData({ title, description, category, audioFile: null });
-          setImagePreview(`${audioFile}`);
+          const { name, description, category, pdfFile } = response.data;
+          setFormData({ name, description, category, pdfFile: null });
+          setImagePreview(`${pdfFile}`);
         })
         .catch((error) => {
-          console.error('Error fetching quote data:', error);
-          toast.error('Error fetching quote data.');
+          console.error('Error fetching book data:', error);
+          toast.error('Error fetching book data.');
         });
     }
-  }, [audioId]);
+  }, [bookId]);
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.title.trim()) {
-      newErrors.title = 'Title is required';
+    if (!formData.name.trim()) {
+      newErrors.name = 'Title is required';
     }
-    if (!audioId && !formData.audioFile) {
-      newErrors.audioFile = 'Image is required';
+    if (!bookId && !formData.category) {
+      newErrors.category = 'category is required';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -60,7 +74,7 @@ const Audio = () => {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
-      setFormData({ ...formData, audioFile: file });
+      setFormData({ ...formData, pdfFile: file });
     }
   };
 
@@ -73,29 +87,29 @@ const Audio = () => {
     setLoading(true);
 
     const data = new FormData();
-    data.append('title', formData.title);
+    data.append('name', formData.name);
     data.append('description', formData.description);
     data.append('category', formData.category);
-    if (formData.audioFile) {
-      data.append('audioFile', formData.audioFile);
+    if (formData.pdfFile) {
+      data.append('pdfFile', formData.pdfFile);
     }
 
     try {
-      if (audioId) {
-        await api.put(`${API_URL}/audios/${audioId}`, data, {
+      if (bookId) {
+        await api.put(`${API_URL}/books/${bookId}`, data, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        toast.success('Quote updated successfully!');
+        toast.success('Reward updated successfully!');
       } else {
-        await api.post(`${API_URL}/audios/`, data, {
+        await api.post(`${API_URL}/books/add-book`, data, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        toast.success('Quote added successfully!');
+        toast.success('Reward added successfully!');
       }
-      navigate('/audios');
+      navigate('/books');
     } catch (error) {
       console.error('Error submitting form:', error);
-      const errorMessage = error.response?.data?.message || 'Failed to add audio.';
+      const errorMessage = error.response?.data?.message || 'Failed to submit books.';
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -106,8 +120,8 @@ const Audio = () => {
     <Row className="justify-content-center">
       <Card>
         <div className="text-center mb-4 mt-4">
-          <h4 className="fw-bold">{audioId ? 'Edit audio' : 'Add audio'}</h4>
-          <p className="text-muted">{audioId ? 'Edit the audio details' : 'Add a new audio'}</p>
+          <h4 className="fw-bold">{bookId ? 'Edit book' : 'Add book'}</h4>
+          <p className="text-muted">{bookId ? 'Edit the book details' : 'Add a new book'}</p>
         </div>
         <Form onSubmit={handleSubmit}>
           <Form.Group as={Row} className="mb-3" controlId="formTitle">
@@ -118,12 +132,12 @@ const Audio = () => {
               <Form.Control
                 type="text"
                 placeholder="Enter title"
-                name="title"
-                value={formData.title}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
-                isInvalid={!!errors.title}
+                isInvalid={!!errors.name}
               />
-              <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
             </Col>
           </Form.Group>
 
@@ -147,38 +161,40 @@ const Audio = () => {
               Category:
             </Form.Label>
             <Col sm={10}>
-              <Form.Control as="select" name="category" value={formData.category} onChange={handleChange} isInvalid={!!errors.category}>
-                <option value="">Select a category</option>
-                <option value="General">General</option>
-                <option value="Music">Music</option>
-                <option value="Podcast">Podcast</option>
-                <option value="Audiobook">Audiobook</option>
-              </Form.Control>
+              <Form.Select name="category" value={formData.category} onChange={handleChange} isInvalid={!!errors.category}>
+                <option value="">Select Category</option>
+                {categories.map((category, index) => (
+                  <option key={index} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </Form.Select>
               <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
             </Col>
           </Form.Group>
 
           <Form.Group as={Row} className="mb-3" controlId="formImage">
             <Form.Label column sm={2} style={{ textAlign: 'right' }}>
-              Audio:
+              Pdf file:
             </Form.Label>
             <Col sm={10}>
-              <Form.Control
-                type="file"
-                name="audioFile"
-                accept="audio/mp3"
-                onChange={handleImageChange}
-                // isInvalid={!!errors.audioFile}
-              />
-              <Form.Control.Feedback type="invalid">{errors.audioFile}</Form.Control.Feedback>
+              <Form.Control type="file" name="pdfFile" accept="application/pdf" onChange={handleImageChange} isInvalid={!!errors.image} />
+              <Form.Control.Feedback type="invalid">{errors.pdfFile}</Form.Control.Feedback>
             </Col>
             <Col sm={2}></Col>
             <Col sm={3} className="mt-3">
               {imagePreview && (
-                <audio controls style={{ width: '100%' }}>
-                  <source src={imagePreview} type="audio/mp3" />
-                  Your browser does not support the audio element.
-                </audio>
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    objectFit: 'cover',
+                    borderRadius: '5px',
+                    border: '1px solid #ddd'
+                  }}
+                />
               )}
             </Col>
           </Form.Group>
@@ -186,9 +202,9 @@ const Audio = () => {
           <Form.Group as={Row} className="mb-3">
             <Col sm={{ span: 10, offset: 2 }} className="d-flex gap-2">
               <Button type="submit" variant="primary" disabled={loading}>
-                {loading ? 'Submitting...' : audioId ? 'Update' : 'Submit'}
+                {loading ? 'Submitting...' : bookId ? 'Update' : 'Submit'}
               </Button>
-              <Button type="button" variant="danger" onClick={() => navigate('/audios')}>
+              <Button type="button" variant="danger" onClick={() => navigate('/rewards')}>
                 Cancel
               </Button>
             </Col>
@@ -199,4 +215,4 @@ const Audio = () => {
   );
 };
 
-export default Audio;
+export default Book;

@@ -165,7 +165,26 @@ export const routes = [
         path: '/audio/:audioId',
         element: lazy(() => import('./views/extra/Audio'))
       },
-
+      {
+        exact: 'true',
+        path: '/orders',
+        element: lazy(() => import('./views/extra/Orders'))
+      },
+      {
+        exact: 'true',
+        path: '/books',
+        element: lazy(() => import('./views/extra/Books'))
+      },
+      {
+        exact: 'true',
+        path: '/book',
+        element: lazy(() => import('./views/extra/Book'))
+      },
+      {
+        exact: 'true',
+        path: '/book/:bookId',
+        element: lazy(() => import('./views/extra/Book'))
+      },
       {
         path: '*',
         exact: 'true',

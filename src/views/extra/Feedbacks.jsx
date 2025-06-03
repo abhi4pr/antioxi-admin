@@ -6,6 +6,7 @@ import axios from 'axios';
 import { API_URL } from '../../constants';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import api from '../../utility/api';
+import Loader from './Loader';
 
 const Feedbacks = () => {
   const [search, setSearch] = useState('');
@@ -18,14 +19,16 @@ const Feedbacks = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await api.get(`${API_URL}/feedbacks?page=${currentPage}&perPage=${perPage}`);
-        setData(response.data.quotes);
-        setFilterData(response.data.quotes);
+        setData(response.data.feedbacks);
+        setFilterData(response.data.feedbacks);
         setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error('Error fetching data', error);
       }
+      setLoading(false);
     };
     fetchData();
   }, []);

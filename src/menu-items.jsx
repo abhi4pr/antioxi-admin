@@ -76,6 +76,22 @@ const menuItems = {
           url: '/audios',
           classes: 'nav-item',
           icon: 'feather icon-sidebar'
+        },
+        {
+          id: 'orders',
+          title: 'Orders',
+          type: 'item',
+          url: '/orders',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
+        },
+        {
+          id: 'books',
+          title: 'Books',
+          type: 'item',
+          url: '/books',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
         }
       ]
     }

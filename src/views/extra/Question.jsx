@@ -122,8 +122,8 @@ const Question = ({ questionToEdit }) => {
               Category:
             </Form.Label>
             <Col sm={10}>
-              <Form.Select name="extra" value={formData.category} onChange={handleChange} isInvalid={!!errors.category}>
-                <option>Select Category</option>
+              <Form.Select name="category" value={formData.category} onChange={handleChange} isInvalid={!!errors.category}>
+                <option value="">Select Category</option>
                 {categories.map((category, index) => (
                   <option key={index} value={category}>
                     {category}
