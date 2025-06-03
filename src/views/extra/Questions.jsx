@@ -23,7 +23,7 @@ const Questions = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${API_URL}/questions?page=${currentPage}&perPage=${perPage}`);
+        const response = await api.get(`${API_URL}/questions?page=${currentPage}&perPage=${perPage}`);
         setData(response.data.questions);
         setFilterData(response.data.questions);
         setTotalPages(response.data.totalPages);

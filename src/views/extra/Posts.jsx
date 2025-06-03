@@ -48,8 +48,8 @@ const Posts = () => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await api.delete(`${API_URL}/posts/${postId}`);
-              const updatedData = data.filter((quote) => quote._id !== postId);
+              await api.delete(`${API_URL}/posts/${quoteId}`);
+              const updatedData = data.filter((quote) => quote._id !== quoteId);
               setData(updatedData);
               setFilterData(updatedData);
               toast.success('Post Deleted successfully!');

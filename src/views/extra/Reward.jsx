@@ -12,7 +12,8 @@ const Reward = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    image: null
+    image: null,
+    level: 0
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
@@ -23,7 +24,7 @@ const Reward = () => {
       api
         .get(`${API_URL}/rewards/${rewardId}`)
         .then((response) => {
-          const { name, description, image } = response.data.reward;
+          const { name, description, image } = response.data;
           setFormData({ name, description, image: null });
           setImagePreview(`${image}`);
         })

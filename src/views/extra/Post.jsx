@@ -11,7 +11,7 @@ const Post = () => {
   const navigate = useNavigate();
   const { postId } = useParams();
   const [formData, setFormData] = useState({
-    user_name: '',
+    // user_name: '',
     title: '',
     content: '',
     category: '',
@@ -21,6 +21,7 @@ const Post = () => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [idFromToken, setIdFromToken] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -28,7 +29,7 @@ const Post = () => {
       try {
         const decoded = jwtDecode(token);
         if (decoded?.id) {
-          setFormData((prev) => ({ ...prev, user: decoded.id }));
+          setIdFromToken(decoded.id);
         }
       } catch (error) {
         console.error('Failed to decode token', error);
@@ -121,11 +122,11 @@ const Post = () => {
     data.append('title', formData.title);
     data.append('content', formData.content);
     data.append('category', formData.category);
-    data.append('user', formData.user);
+    data.append('user', idFromToken);
 
     // Append images as an array
     formData.images.forEach((img, i) => {
-      data.append(`images[${i}]`, img);
+      data.append(`images`, img);
     });
 
     try {
