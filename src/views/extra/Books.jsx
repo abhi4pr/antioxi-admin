@@ -24,8 +24,8 @@ const Books = () => {
       setLoading(true);
       try {
         const response = await api.get(`${API_URL}/books?page=${currentPage}&perPage=${perPage}`);
-        setData(response.data);
-        setFilterData(response.data);
+        setData(response.data.books);
+        setFilterData(response.data.books);
         setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error('Error fetching data', error);

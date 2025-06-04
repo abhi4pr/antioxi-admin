@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import Loader from './Loader';
 import api from '../../utility/api';
 
-const Posts = () => {
+const Medicines = () => {
   const [search, setSearch] = useState('');
   const [data, setData] = useState([]);
   const [filterData, setFilterData] = useState([]);
@@ -23,9 +23,9 @@ const Posts = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await api.get(`${API_URL}/posts?page=${currentPage}&perPage=${perPage}`);
-        setData(response.data.posts);
-        setFilterData(response.data.posts);
+        const response = await api.get(`${API_URL}/medicines?page=${currentPage}&perPage=${perPage}`);
+        setData(response.data.medicines);
+        setFilterData(response.data.medicines);
         setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error('Error fetching data', error);
@@ -36,23 +36,23 @@ const Posts = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    setFilterData(data.filter((d) => d.title.toLowerCase().includes(search.toLowerCase())));
+    setFilterData(data.filter((d) => d.name.toLowerCase().includes(search.toLowerCase())));
   }, [search, data]);
 
   const handleDelete = async (quoteId) => {
     confirmAlert({
       title: 'Confirm Deletion',
-      message: 'Are you sure you want to delete this post?',
+      message: 'Are you sure you want to delete this medicine ?',
       buttons: [
         {
           label: 'Yes',
           onClick: async () => {
             try {
-              await api.delete(`${API_URL}/posts/${quoteId}`);
+              await api.delete(`${API_URL}/medicines/${quoteId}`);
               const updatedData = data.filter((quote) => quote._id !== quoteId);
               setData(updatedData);
               setFilterData(updatedData);
-              toast.success('Post Deleted successfully!');
+              toast.success('medicine Deleted successfully!');
             } catch (error) {
               console.error('Error deleting quote', error);
             }
@@ -74,13 +74,13 @@ const Posts = () => {
       sortable: true
     },
     {
-      name: 'Post Title',
-      selector: (row) => row.title,
+      name: 'Name',
+      selector: (row) => row.name,
       sortable: true
     },
     {
       name: 'Description',
-      selector: (row) => (row.content && row.content.length > 50 ? row.content.substring(0, 50) + '...' : row.content),
+      selector: (row) => (row.description && row.description.length > 50 ? row.description.substring(0, 50) + '...' : row.description),
       sortable: true
     },
     {
@@ -89,14 +89,9 @@ const Posts = () => {
       sortable: true
     },
     {
-      name: 'Posted by',
-      selector: (row) => row.user_name,
-      sortable: true
-    },
-    {
       name: 'Edit',
       cell: (row) => (
-        <Link to={`/post/${row._id}`}>
+        <Link to={`/medicine/${row._id}`}>
           <button className="w-100 btn btn-outline-info btn-sm user-button">Edit</button>
         </Link>
       )
@@ -118,21 +113,21 @@ const Posts = () => {
           <Card.Body>
             <Row style={{ marginBottom: 20 }}>
               <div>
-                <h4 className="fw-bold">Posts</h4>
-                <p className="text-muted">All Posts list</p>
+                <h4 className="fw-bold">Medicines</h4>
+                <p className="text-muted">All Medicines list</p>
               </div>
               <Col md={6}>
                 <input
                   type="text"
-                  placeholder="Search Posts..."
+                  placeholder="Search Medicines..."
                   className="form-control"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </Col>
               <Col md={6} className="text-end">
-                <Link to="/post">
-                  <Button variant="primary">Add Post</Button>
+                <Link to="/medicine">
+                  <Button variant="primary">Add Medicine</Button>
                 </Link>
               </Col>
             </Row>
@@ -157,4 +152,4 @@ const Posts = () => {
   );
 };
 
-export default Posts;
+export default Medicines;

@@ -92,26 +92,6 @@ export const routes = [
 
       {
         exact: 'true',
-        path: '/videos',
-        element: lazy(() => import('./views/extra/Videos'))
-      },
-      {
-        exact: 'true',
-        path: '/video',
-        element: lazy(() => import('./views/extra/Video'))
-      },
-      {
-        exact: 'true',
-        path: '/video/:videoId',
-        element: lazy(() => import('./views/extra/Video'))
-      },
-      {
-        exact: 'true',
-        path: '/video/videoId',
-        element: lazy(() => import('./views/extra/Video'))
-      },
-      {
-        exact: 'true',
         path: '/users',
         element: lazy(() => import('./views/extra/Users'))
       },
@@ -184,6 +164,21 @@ export const routes = [
         exact: 'true',
         path: '/book/:bookId',
         element: lazy(() => import('./views/extra/Book'))
+      },
+      {
+        exact: 'true',
+        path: '/medicines',
+        element: lazy(() => import('./views/extra/Medicines'))
+      },
+      {
+        exact: 'true',
+        path: '/medicine',
+        element: lazy(() => import('./views/extra/Medicine'))
+      },
+      {
+        exact: 'true',
+        path: '/medicine/:medicineId',
+        element: lazy(() => import('./views/extra/Medicine'))
       },
       {
         path: '*',

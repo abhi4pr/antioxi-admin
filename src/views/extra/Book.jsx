@@ -184,15 +184,14 @@ const Book = () => {
             <Col sm={2}></Col>
             <Col sm={3} className="mt-3">
               {imagePreview && (
-                <img
+                <iframe
                   src={imagePreview}
-                  alt="Preview"
+                  title="PDF Preview"
                   style={{
-                    width: '100px',
-                    height: '100px',
-                    objectFit: 'cover',
-                    borderRadius: '5px',
-                    border: '1px solid #ddd'
+                    width: '100%',
+                    height: '400px',
+                    border: '1px solid #ddd',
+                    borderRadius: '5px'
                   }}
                 />
               )}

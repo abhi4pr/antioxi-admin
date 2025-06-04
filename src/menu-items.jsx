@@ -29,14 +29,7 @@ const menuItems = {
           classes: 'nav-item',
           icon: 'feather icon-sidebar'
         },
-        {
-          id: 'videos',
-          title: 'Videos & status',
-          type: 'item',
-          url: '/videos',
-          classes: 'nav-item',
-          icon: 'feather icon-sidebar'
-        },
+
         {
           id: 'users',
           title: 'Users',
@@ -90,6 +83,14 @@ const menuItems = {
           title: 'Books',
           type: 'item',
           url: '/books',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
+        },
+        {
+          id: 'medicines',
+          title: 'Medicines',
+          type: 'item',
+          url: '/medicines',
           classes: 'nav-item',
           icon: 'feather icon-sidebar'
         }
