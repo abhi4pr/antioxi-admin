@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import Loader from './Loader';
 import api from '../../utility/api'
 
-const Audios = () => {
+const Diets = () => {
     const [search, setSearch] = useState("");
     const [data, setData] = useState([]);
     const [filterData, setFilterData] = useState([]);
@@ -23,10 +23,10 @@ const Audios = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await api.get(`${API_URL}/audios?page=${currentPage}&perPage=${perPage}`);
-                setData(response.data.audios);
+                const response = await api.get(`${API_URL}/diets?page=${currentPage}&perPage=${perPage}`);
+                setData(response.data.diets);
                 setTotalPages(response.data.totalPages)
-                setFilterData(response.data.audios);
+                setFilterData(response.data.diets);
             } catch (error) {
                 console.error('Error fetching data', error);
             }
@@ -42,19 +42,19 @@ const Audios = () => {
     const handleDelete = async (audioId) => {
         confirmAlert({
             title: 'Confirm Deletion',
-            message: 'Are you sure you want to delete this audio?',
+            message: 'Are you sure you want to delete this diet ?',
             buttons: [
                 {
                     label: 'Yes',
                     onClick: async () => {
                         try {
-                            await api.delete(`${API_URL}/audios/${audioId}`);
+                            await api.delete(`${API_URL}/diets/${audioId}`);
                             const updatedData = data.filter(quote => quote._id !== audioId);
                             setData(updatedData);
                             setFilterData(updatedData);
-                            toast.success('Audio Deleted successfully!');
+                            toast.success('Diet Deleted successfully!');
                         } catch (error) {
-                            console.error('Error deleting audio', error);
+                            console.error('Error deleting Diet', error);
                         }
                     }
                 },
@@ -92,16 +92,22 @@ const Audios = () => {
 
         },
         {
-            name: "Audio",
-            selector: (row) => row.audioFile,
-            cell: (row) => <img src={row.audioFile} width="50" />,
+            name: "calories",
+            selector: (row) => row.calories,
+            sortable: true,
+
+        },
+        {
+            name: "Image",
+            selector: (row) => row.image,
+            cell: (row) => <img src={row.image} width="50" />,
             sortable: true,
 
         },
         {
             name: "Edit",
             cell: (row) => (
-                <Link to={`/audio/${row._id}`}>
+                <Link to={`/diet/${row._id}`}>
                     <button className="w-100 btn btn-outline-info btn-sm user-button">
                         Edit
                     </button>
@@ -130,21 +136,21 @@ const Audios = () => {
                     <Card.Body>
                         <Row style={{ marginBottom: 20 }}>
                             <div>
-                                <h4 className="fw-bold">Audio</h4>
-                                <p className="text-muted">All audio list</p>
+                                <h4 className="fw-bold">Diets</h4>
+                                <p className="text-muted">All Diets list</p>
                             </div>
                             <Col md={6}>
                                 <input
                                     type="text"
-                                    placeholder="Search Audio..."
+                                    placeholder="Search Diets..."
                                     className="form-control"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                             </Col>
                             <Col md={6} className="text-end">
-                                <Link to="/audio">
-                                    <Button variant="primary">Add Audio</Button>
+                                <Link to="/diet">
+                                    <Button variant="primary">Add Diet</Button>
                                 </Link>
                             </Col>
                         </Row>
@@ -168,4 +174,4 @@ const Audios = () => {
     );
 };
 
-export default Audios;
+export default Diets;

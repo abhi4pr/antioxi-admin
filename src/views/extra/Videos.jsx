@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import Loader from './Loader';
 import api from '../../utility/api'
 
-const Audios = () => {
+const Videos = () => {
     const [search, setSearch] = useState("");
     const [data, setData] = useState([]);
     const [filterData, setFilterData] = useState([]);
@@ -23,10 +23,10 @@ const Audios = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await api.get(`${API_URL}/audios?page=${currentPage}&perPage=${perPage}`);
-                setData(response.data.audios);
+                const response = await api.get(`${API_URL}/videos?page=${currentPage}&perPage=${perPage}`);
+                setData(response.data.videos);
                 setTotalPages(response.data.totalPages)
-                setFilterData(response.data.audios);
+                setFilterData(response.data.videos);
             } catch (error) {
                 console.error('Error fetching data', error);
             }
@@ -42,19 +42,19 @@ const Audios = () => {
     const handleDelete = async (audioId) => {
         confirmAlert({
             title: 'Confirm Deletion',
-            message: 'Are you sure you want to delete this audio?',
+            message: 'Are you sure you want to delete this video?',
             buttons: [
                 {
                     label: 'Yes',
                     onClick: async () => {
                         try {
-                            await api.delete(`${API_URL}/audios/${audioId}`);
+                            await api.delete(`${API_URL}/videos/${audioId}`);
                             const updatedData = data.filter(quote => quote._id !== audioId);
                             setData(updatedData);
                             setFilterData(updatedData);
-                            toast.success('Audio Deleted successfully!');
+                            toast.success('Video Deleted successfully!');
                         } catch (error) {
-                            console.error('Error deleting audio', error);
+                            console.error('Error deleting Video', error);
                         }
                     }
                 },
@@ -92,8 +92,8 @@ const Audios = () => {
 
         },
         {
-            name: "Audio",
-            selector: (row) => row.audioFile,
+            name: "Video",
+            selector: (row) => row.videoFile,
             cell: (row) => <img src={row.audioFile} width="50" />,
             sortable: true,
 
@@ -101,7 +101,7 @@ const Audios = () => {
         {
             name: "Edit",
             cell: (row) => (
-                <Link to={`/audio/${row._id}`}>
+                <Link to={`/video/${row._id}`}>
                     <button className="w-100 btn btn-outline-info btn-sm user-button">
                         Edit
                     </button>
@@ -130,21 +130,21 @@ const Audios = () => {
                     <Card.Body>
                         <Row style={{ marginBottom: 20 }}>
                             <div>
-                                <h4 className="fw-bold">Audio</h4>
-                                <p className="text-muted">All audio list</p>
+                                <h4 className="fw-bold">Video</h4>
+                                <p className="text-muted">All Video list</p>
                             </div>
                             <Col md={6}>
                                 <input
                                     type="text"
-                                    placeholder="Search Audio..."
+                                    placeholder="Search Video..."
                                     className="form-control"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                             </Col>
                             <Col md={6} className="text-end">
-                                <Link to="/audio">
-                                    <Button variant="primary">Add Audio</Button>
+                                <Link to="/video">
+                                    <Button variant="primary">Add Video</Button>
                                 </Link>
                             </Col>
                         </Row>
@@ -168,4 +168,4 @@ const Audios = () => {
     );
 };
 
-export default Audios;
+export default Videos;

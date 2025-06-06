@@ -181,6 +181,36 @@ export const routes = [
         element: lazy(() => import('./views/extra/Medicine'))
       },
       {
+        exact: 'true',
+        path: '/videos',
+        element: lazy(() => import('./views/extra/Videos'))
+      },
+      {
+        exact: 'true',
+        path: '/video',
+        element: lazy(() => import('./views/extra/Video'))
+      },
+      {
+        exact: 'true',
+        path: '/video/:videoId',
+        element: lazy(() => import('./views/extra/Video'))
+      },
+      {
+        exact: 'true',
+        path: '/diets',
+        element: lazy(() => import('./views/extra/Diets'))
+      },
+      {
+        exact: 'true',
+        path: '/diet',
+        element: lazy(() => import('./views/extra/Diet'))
+      },
+      {
+        exact: 'true',
+        path: '/diet/:dietId',
+        element: lazy(() => import('./views/extra/Diet'))
+      },
+      {
         path: '*',
         exact: 'true',
         element: () => <Navigate to={BASE_URL} />

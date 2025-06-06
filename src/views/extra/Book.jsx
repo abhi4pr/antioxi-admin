@@ -99,12 +99,12 @@ const Book = () => {
         await api.put(`${API_URL}/books/${bookId}`, data, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        toast.success('Reward updated successfully!');
+        toast.success('Book updated successfully!');
       } else {
         await api.post(`${API_URL}/books/add-book`, data, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        toast.success('Reward added successfully!');
+        toast.success('Book added successfully!');
       }
       navigate('/books');
     } catch (error) {

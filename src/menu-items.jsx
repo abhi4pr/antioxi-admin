@@ -93,6 +93,22 @@ const menuItems = {
           url: '/medicines',
           classes: 'nav-item',
           icon: 'feather icon-sidebar'
+        },
+        {
+          id: 'videos',
+          title: 'Videos',
+          type: 'item',
+          url: '/videos',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
+        },
+        {
+          id: 'diets',
+          title: 'Diets',
+          type: 'item',
+          url: '/diets',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
         }
       ]
     }
