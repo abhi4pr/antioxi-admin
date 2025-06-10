@@ -109,6 +109,14 @@ const menuItems = {
           url: '/diets',
           classes: 'nav-item',
           icon: 'feather icon-sidebar'
+        },
+        {
+          id: 'levels',
+          title: 'Levels',
+          type: 'item',
+          url: '/levels',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
         }
       ]
     }

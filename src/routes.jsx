@@ -211,6 +211,21 @@ export const routes = [
         element: lazy(() => import('./views/extra/Diet'))
       },
       {
+        exact: 'true',
+        path: '/levels',
+        element: lazy(() => import('./views/extra/Levels'))
+      },
+      {
+        exact: 'true',
+        path: '/level',
+        element: lazy(() => import('./views/extra/Level'))
+      },
+      {
+        exact: 'true',
+        path: '/level/:levelId',
+        element: lazy(() => import('./views/extra/Level'))
+      },
+      {
         path: '*',
         exact: 'true',
         element: () => <Navigate to={BASE_URL} />

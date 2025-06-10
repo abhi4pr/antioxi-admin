@@ -72,17 +72,16 @@ const Books = () => {
     {
       name: 'S.No',
       cell: (row, index) => <div>{index + 1}</div>,
-      width: '9%',
       sortable: true
     },
     {
       name: 'Title',
       selector: (row) => row.name,
-      sortable: true
+      sortable: true,
     },
     {
       name: 'Description',
-      selector: (row) => row.description,
+      selector: (row) => (row.description && row.description.length > 50 ? row.description.substring(0, 50) + '...' : row.description),
       sortable: true
     },
     {
