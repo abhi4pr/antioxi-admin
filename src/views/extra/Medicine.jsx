@@ -213,6 +213,12 @@ const Medicine = () => {
               <Form.Control as="select" name="category" value={formData.category} onChange={handleChange} isInvalid={!!errors.category}>
                 <option value="">Select a category</option>
                 <option value="Default">Default</option>
+                <option value="General">General</option>
+                <option value="Homeopathy Remedies">Homeopathy Remedies</option>
+                <option value="Ayurvedic Formulas">Ayurvedic Formulas</option>
+                <option value="Freedom In-House Combos Emotional Healing Kits">Freedom In-House Combos Emotional Healing Kits</option>
+                <option value="Detox Kits">Detox Kits</option>
+                <option value="Supplementary Support (Oils, Tonics, Teas)">Supplementary Support (Oils, Tonics, Teas)</option>
               </Form.Control>
               <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
             </Col>

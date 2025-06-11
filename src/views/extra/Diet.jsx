@@ -155,9 +155,14 @@ const Diet = () => {
                             <Form.Control as="select" name="category" value={formData.category} onChange={handleChange} isInvalid={!!errors.category}>
                                 <option value="">Select a category</option>
                                 <option value="General">General</option>
-                                <option value="Indian Food">Indian Food</option>
-                                <option value="Fast Food">Fast Food</option>
-
+                                <option value="Indian Recipes">Indian Recipes</option>
+                                <option value="Grains">Grains</option>
+                                <option value="Vegetables">Vegetables</option>
+                                <option value="Fruits Dairy">Fruits Dairy</option>
+                                <option value="Veg">Veg</option>
+                                <option value="Non-veg">Non-veg</option>
+                                <option value="Satvik food">Satvik food</option>
+                                <option value="Special Drinks">Special Drinks</option>
                             </Form.Control>
                             <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
                         </Col>

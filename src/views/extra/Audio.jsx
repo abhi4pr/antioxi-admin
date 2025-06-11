@@ -150,9 +150,19 @@ const Audio = () => {
               <Form.Control as="select" name="category" value={formData.category} onChange={handleChange} isInvalid={!!errors.category}>
                 <option value="">Select a category</option>
                 <option value="General">General</option>
-                <option value="Music">Music</option>
-                <option value="Podcast">Podcast</option>
-                <option value="Audiobook">Audiobook</option>
+                <option value="Spiritual">Spiritual</option>
+                <option value="Bhakti & Mantra">Bhakti & Mantra</option>
+                <option value="Guided Meditation">Guided Meditation</option>
+                <option value="De-addiction Support">De-addiction Support</option>
+                <option value="Motivational">Motivational</option>
+                <option value="Sleep & Relaxation">Sleep & Relaxation</option>
+                <option value="Inner Child Healing">Inner Child Healing</option>
+                <option value="Mind Detox">Mind Detox</option>
+                <option value="wisdom">Wisdom</option>
+                <option value="Daily Mental Dose Morning/night ritual audios">Daily Mental Dose Morning/night ritual audios</option>
+                <option value="User Stories/Real Talks">User Stories/Real Talks</option>
+                <option value="Binaural beats">Binaural beats</option>
+                <option value="Frequency Healing">Frequency Healing</option>
               </Form.Control>
               <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
             </Col>

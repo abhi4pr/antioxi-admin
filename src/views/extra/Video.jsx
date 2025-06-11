@@ -150,9 +150,13 @@ const Video = () => {
                             <Form.Control as="select" name="category" value={formData.category} onChange={handleChange} isInvalid={!!errors.category}>
                                 <option value="">Select a category</option>
                                 <option value="General">General</option>
-                                <option value="Music">Music</option>
-                                <option value="Podcast">Podcast</option>
-                                <option value="Audiobook">Audiobook</option>
+                                <option value="Game Journey Videos">Game Journey Videos</option>
+                                <option value="Educational Videos">Educational Videos</option>
+                                <option value="Motivational Videos">Motivational Videos</option>
+                                <option value="YouTube/External Videos">YouTube/External Videos</option>
+                                <option value="Background Visuals">Background Visuals</option>
+                                <option value="Loop visuals">Loop visuals</option>
+                                <option value="Meditative clips">Meditative clips</option>
                             </Form.Control>
                             <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
                         </Col>
